@@ -1,0 +1,25 @@
+<form method="post">
+    {% csrf_token %}
+    <label>Name: </label>
+    <input name="name" value="{{user.name}}">
+    <br>
+    <label>Last Name : </label>
+    <input name="lname" value="{{user.lname}}">
+    <br>
+    <label>Username: </label>
+    <input name="username" value="{{user.username}}">
+    <br>
+    <label>User ID: </label>
+    <input name="userid" value="{{user.userid}}">
+    <br>
+    <label>Password: </label>
+    <input name="password" value="{{user.password}}">
+    <br>
+    <label>Email: </label>
+    <input name="email" value="{{user.email}}">
+    <br>
+    <label>Is Admin?: </label>
+    <input name="is_admin" value="{{user.is_admin}}">
+    <br>
+    <input type="submit" value="Submit">
+</form>

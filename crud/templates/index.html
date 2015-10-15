@@ -1,0 +1,28 @@
+{% if people %}
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Userid</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>Is admin?</th>
+        </tr>
+    {% for user in people %}
+        <tr>
+            <td>{{user.name}}</td>
+            <td>{{user.lname}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.userid}}</td>
+            <td>{{user.password}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.is_admin}}</td>
+            <td><a href="/delete/{{user.id}}">Delete</a></td>
+            <td><a href="/edit/{{person.id}}">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No user in the database</p>
+{% endif %}
