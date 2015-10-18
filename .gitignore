@@ -55,3 +55,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# IDE
+.idea/*
+
+# No env folder
+env
+
+# No temp files
+*~
