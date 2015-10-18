@@ -57,4 +57,10 @@ docs/_build/
 target/
 
 # IDE
-.idea/
+.idea/*
+
+# No env folder
+env
+
+# No temp files
+*~
