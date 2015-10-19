@@ -14,7 +14,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+#import django.contrib.auth
+#django.contrib.auth.LOGIN_URL = '/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -71,7 +72,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'master_node.wsgi.application'
-
+TEMPLATE_DIRS = (
+      '/home/sayalee/raspberrypi_cluster/master_node/core/templates',
+     os.path.join(os.path.dirname(__file__), 'templates'),
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
