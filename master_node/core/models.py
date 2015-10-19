@@ -1,22 +1,20 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
-from django.contrib import admin
-import json
 
 
 # TODO: For now allowed null. Remove when not required.
-
-class User(models.Model):
-    username = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255, null=True)
-    name = models.CharField(max_length=255, null=True)
-    lname = models.CharField(max_length=255, null=True)
-    is_admin = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.username
+# TODO: USe auth_user defaut table
+# class User(models.Model):
+#     username = models.CharField(max_length=255)
+#     password = models.CharField(max_length=255)
+#     email = models.EmailField(max_length=255, null=True)
+#     name = models.CharField(max_length=255, null=True)
+#     lname = models.CharField(max_length=255, null=True)
+#     is_admin = models.BooleanField(default=False)
+#
+#     def __str__(self):
+#         return self.username
 
 
 class Project(models.Model):
