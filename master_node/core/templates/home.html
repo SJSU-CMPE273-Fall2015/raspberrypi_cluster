@@ -4,4 +4,29 @@
 {% block content %}
     <p>Welcome {{ user.username }} !!!</p>
     <a href="/logout/">Logout</a>
+    <a href="/insert/">Create Project</a>
+{% if people %}
+    <table>
+        <tr>
+            <th>Project Name</th>
+            <th>Project URL</th>
+            <th>Project Owner</th>
+            <th>Project Last Build Time</th>
+            <th>Project Creation Time</th>
+        </tr>
+    {% for project in people %}
+        <tr>
+            <td>{{project.project_name}}</td>
+            <td>{{project.url}}</td>
+            <td>{{project.owner}}</td>
+            <td>{{project.last_build_time}}</td>
+            <td>{{project.created_time}}</td>
+            <td><a href="/edit/{{project.id}}">Edit</a></td>
+            <td><a href="/delete/{{project.id}}">Delete</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No project in the database</p>
+{% endif %}
 {% endblock %}

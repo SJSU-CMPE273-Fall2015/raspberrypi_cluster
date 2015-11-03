@@ -5,7 +5,9 @@ from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-from django.template import RequestContext
+from django.http import HttpResponse
+from django.template import loader, Context, RequestContext
+from .models import Project
 
 
 @csrf_protect
@@ -45,7 +47,45 @@ def logout_page(request):
 
 @login_required
 def home(request):
-    return render_to_response(
-        'home.html',
-        {'user': request.user}
-    )
+    people = Project.objects.all()
+    t = loader.get_template('home.html')
+    c = Context({'people': people})
+    return HttpResponse(t.render(c))
+
+
+def insert(request):
+    # If this is a post request we insert the person
+    if request.method == 'POST':
+        p = Project(
+            project_name=request.POST['project_name'],
+            url=request.POST['url'],
+            owner=request.POST['owner'],
+            last_build_time=request.POST['last_build_time'],
+            created_time=request.POST['created_time']
+        )
+        p.save()
+
+    t = loader.get_template('insert.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))
+
+
+def delete(request, project_id):
+    p = Project.objects.get(pk=project_id)
+    p.delete()
+    return HttpResponseRedirect('/')
+
+def edit(request, project_id):
+    p = Project.objects.get(pk=project_id)
+    if request.method == 'POST':
+        p.project_name = request.POST['project_name']
+        p.url = request.POST['url']
+        p.owner = request.POST['owner']
+        p.last_build_time = request.POST['last_build_time']
+        p.created_time = request.POST['created_time']
+        p.save()
+    t = loader.get_template('insert.html')
+    c = RequestContext(request, {
+        'project': p
+    })
+    return HttpResponse(t.render(c))

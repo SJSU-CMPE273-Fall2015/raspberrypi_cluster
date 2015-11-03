@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Project</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    <label>Project Name: </label>
+    <input name="project_name" value="{{project.project_name}}">
+    <br>
+    <label>Project URL: </label>
+    <input name="url"  value="{{project.url}}">
+    <br>
+    <label>Project Owner: </label>
+    <input name="owner"  value="{{project.owner}}">
+    <br>
+    <label>Project Creation Time: </label>
+    <input name="created_time"  value="{{project.created_time}}">
+    <br>
+    <label>Project Build Time: </label>
+    <input name="last_build_time"  value="{{project.last_build_time}}">
+    <br>
+    <input type="hidden" name="id" value="{{project.id}}">
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
