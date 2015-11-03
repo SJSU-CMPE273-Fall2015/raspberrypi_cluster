@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+
+
 # Create your models here.
 
 
@@ -72,9 +74,7 @@ class ClusterProject(models.Model):
 
 class ProjectBuild(models.Model):
     project = models.ForeignKey(Project, null=True)
-
-    # TODO: Kept this field as binary. If required will change this.
-    build = models.BinaryField(null=True)
+    build = models.FileField(null=True)
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

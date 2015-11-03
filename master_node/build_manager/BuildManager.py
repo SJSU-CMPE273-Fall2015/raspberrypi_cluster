@@ -2,21 +2,42 @@ __author__ = 'saurabh'
 
 from pathlib import Path
 import string
+import subprocess
 
 import os
 import random
 from git import Repo
 from core.models import Project
+import tarfile
+
 
 
 # Length f the dirname
 N = 6
+
+# Python slug prefix
+PYTHON = "py_"
+
+# Golang slug prefix
+GOLANG = "go_"
 
 # Dict to maintain project pk to dirname
 project_dictionary = {}
 
 # Base url to store cloned project
 base_path = "/home/saurabh/Desktop/"
+
+
+def find_project(project_id):
+    """
+    Method to fetch project from Project model based on pk.
+
+    """
+    # TODO currently fetching hard coded pk. Implement dynamic handling.
+    p = Project.objects.get(pk=project_id)
+    print(p)
+
+    clone_project(p)
 
 
 def clone_project(project):
@@ -35,19 +56,6 @@ def clone_project(project):
     detect_language(project)
 
 
-def find_project():
-    """
-    Method to fetch project from Project model based on pk.
-
-    """
-    # TODO currently fetching hard coded pk. Implement dynamic handling.
-    p = Project.objects.get(pk=3)
-    print(p)
-
-    # TODO clone project can be removed to different manager kind of method
-    clone_project(p)
-
-
 def detect_language(project):
     """
     Function which detects language used for the project.
@@ -57,12 +65,52 @@ def detect_language(project):
     p = Path(base_path + project_dictionary[project.pk])
     if os.path.isfile(p.__str__() + '/requirements.txt'):
         print("Python Repository found..")
+        download_python_dependencies(project)
 
-    elif os.path.isfile(p.__str__() + '/godep'):
+    elif os.path.isfile(p.__str__() + '/godep.packages'):
         print("Go Repository found..")
+        download_go_dependencies(project)
 
     else:
         print("Can not identify project..")
+
+
+def download_python_dependencies(project):
+    """
+    Download dependencies for the project.
+    :param project:
+    """
+    subprocess.call(["build_manager/scripts/get_dependencies_python.sh", project_dictionary[project.pk]],
+                    stdout=subprocess.PIPE)
+    create_zip(project, PYTHON)
+
+
+def download_go_dependencies(project):
+    popen = subprocess.Popen(["build_manager/scripts/get_dependencies_golang.sh", project_dictionary[project.pk]],
+                    stdout =subprocess.PIPE)
+    lines_iterator = iter(popen.stdout.readline, b"")
+    for line in lines_iterator:
+        print(line) # yield line
+
+    create_zip(project, GOLANG)
+
+
+def create_zip(project, language):
+    """
+    The function to create the slug.
+    :param project:
+    """
+    tar = tarfile.open(base_path + language + project_dictionary[project.pk] + '.tar.gz', mode='w:gz')
+    try:
+        # zf.write(base_path + project_dictionary[project.pk])
+        path = base_path
+        os.chdir(path)
+        for root, dirs, files in os.walk(project_dictionary[project.pk]):
+            for file in files:
+                tar.add(os.path.join(root, file))
+
+    finally:
+        tar.close()
 
 
 def remove_old_dir():
