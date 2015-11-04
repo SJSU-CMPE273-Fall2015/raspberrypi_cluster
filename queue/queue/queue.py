@@ -2,21 +2,30 @@ __author__ = 'saurabh'
 import time
 
 
-class QueueTask(object):
-    def __init__(self, task_id, task, priority=3, *args):
-        self.task_id = task_id
-        self.status = "Wait"
-        self.time = time.time()
-        self.task = task
-        self.args = args
-        self.priority = priority
+class ClusterIdentifier(object):
+    def __init__(self, ip, port):
+        self.ip = ip;
+        self.port = port;
 
-    def execute(self):
-        self.task(self.args)
+
+class TaskState(object):
+    WAIT = "WAIT"
+    IN_PROGRESS = "IN PROGRESS"
+    FAILED = "FAILED"
+    COMPLETED = "COMPLETED"
+
+
+class QueueTask(object):
+    def __init__(self, task_id, data, priority=3):
+        self.task_id = task_id
+        self.status = TaskState.WAIT
+        self.time = time.time()
+        self.data = data
+        self.priority = priority
 
     def __str__(self, *args, **kwargs):
         return str(self.task_id) + ":" + str(self.time) + ":" + self.status + ":" + str(self.priority) + ":" + str(
-            self.args)
+            self.data)
 
     def __repr__(self):
         return self.__str__()
@@ -46,15 +55,22 @@ class QueueTask(object):
 #
 
 class PriorityQueue(object):
-    def __init__(self):
+    MAX_PRIORITY = 3
+
+    def __init__(self, queueId):
         self.heap = []
+        self.queueId = queueId
+        self.healthCheckUp()
+
+    def has_more(self):
+        return len(self.heap) > 0
 
     def enqueue(self, task=QueueTask):
         self.heap.append(task)
         pass
 
     def pop(self):
-        highest_priority = 3
+        highest_priority = self.MAX_PRIORITY
         iter = 0
         index = 0
 
@@ -65,8 +81,24 @@ class PriorityQueue(object):
             iter += 1
         return self.heap.pop(index)
 
+    # def remove(self, taskId):
+    #     for task in self.heap:
+    #         if task.task_id == taskId:
+    #             self.heap.remove(task)
+
     def __str__(self):
         return str(self.heap)
 
     def __repr__(self):
         return self.__str__()
+
+    def healthCheckUp(self):
+        print("Checking Queue Health...")
+        import time
+        for task in self.heap:
+            if time.time() - task.time >= 20:
+                task.status = TaskState.FAILED
+                self.heap.remove(task)
+                print("Removed task:", task)
+        import threading
+        threading.Timer(3.0, self.healthCheckUp).start()
