@@ -47,7 +47,7 @@ def logout_page(request):
 
 @login_required
 def home(request):
-    people = Project.objects.all()
+    people = Project.objects.get(owner = request.user)
     t = loader.get_template('home.html')
     c = Context({'people': people})
     return HttpResponse(t.render(c))
@@ -59,12 +59,10 @@ def insert(request):
         p = Project(
             project_name=request.POST['project_name'],
             url=request.POST['url'],
-            owner=request.POST['owner'],
-            last_build_time=request.POST['last_build_time'],
-            created_time=request.POST['created_time']
+            owner=request.user
         )
         p.save()
-
+        return HttpResponseRedirect('/')
     t = loader.get_template('insert.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
@@ -80,9 +78,7 @@ def edit(request, project_id):
     if request.method == 'POST':
         p.project_name = request.POST['project_name']
         p.url = request.POST['url']
-        p.owner = request.POST['owner']
-        p.last_build_time = request.POST['last_build_time']
-        p.created_time = request.POST['created_time']
+        p.owner = request.user
         p.save()
     t = loader.get_template('insert.html')
     c = RequestContext(request, {
