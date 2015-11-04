@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from core.forms import *
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
@@ -45,9 +44,8 @@ def logout_page(request):
     return HttpResponseRedirect('/')
 
 
-@login_required
 def home(request):
-    people = Project.objects.get(owner = request.user)
+    people = Project.objects.filter(owner = request.user)
     t = loader.get_template('home.html')
     c = Context({'people': people})
     return HttpResponse(t.render(c))
@@ -73,6 +71,7 @@ def delete(request, project_id):
     p.delete()
     return HttpResponseRedirect('/')
 
+
 def edit(request, project_id):
     p = Project.objects.get(pk=project_id)
     if request.method == 'POST':
@@ -80,8 +79,24 @@ def edit(request, project_id):
         p.url = request.POST['url']
         p.owner = request.user
         p.save()
+        return HttpResponseRedirect('/')
     t = loader.get_template('insert.html')
     c = RequestContext(request, {
         'project': p
     })
+    return HttpResponse(t.render(c))
+
+
+def select(request):
+    # If this is a post request we insert the person
+    if request.method == 'POST':
+        p = Project(
+            project_name=request.POST['project_name'],
+            url=request.POST['url'],
+            owner=request.user
+        )
+        p.save()
+        return HttpResponseRedirect('/')
+    t = loader.get_template('select.html')
+    c = RequestContext(request)
     return HttpResponse(t.render(c))
