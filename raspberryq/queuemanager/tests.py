@@ -13,12 +13,10 @@ def teardown():
 
 
 def test_queue():
-    def test(args):
-        print("--------------Hello world!")
-        for i in args:
-            print(i)
+    dict = {"Project_id": 1}
+    import json
+    temp = json.dumps(dict)
 
-    temp = test
     q1 = SimpleQueueTask(1, temp)
     q2 = SimpleQueueTask(2, temp)
     q3 = SimpleQueueTask(3, temp)
@@ -54,6 +52,8 @@ def test_queue():
     assert len(queue.heap) == 1
     assert elem.priority == 3
     assert elem.task_id == 2
+
+    print(json.dumps(q1))
 
 
 def test_queuemanager():
