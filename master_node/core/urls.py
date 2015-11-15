@@ -12,5 +12,5 @@ urlpatterns = patterns('',
     url(r'^insert/$', views.insert, name='insert'),
     url(r'^delete/(?P<project_id>\d+)$', views.delete, name='delete'),
     url(r'^edit/(?P<project_id>\d+)$', views.edit, name='edit'),
-    url(r'^select/$', views.select, name='select')
+    url(r'^info/$', views.info, name='info')
 )
