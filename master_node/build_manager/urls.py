@@ -4,5 +4,5 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^(?P<project_id>\d{0,11})$', views.index, name='views.index'),
 ]
