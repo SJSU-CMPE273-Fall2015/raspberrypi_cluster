@@ -218,6 +218,18 @@ class QueueManager(object):
                 return True
         return False
 
+    def addToFailureQueue(self, topic, task_id):
+        if topic not in self.queues:
+            return False
+        for task in self.queues[topic].heap:
+            if task.task_id == task_id:
+                temp = task
+                temp.status = TaskState.FAILURE
+                self.failure_queue.enqueue(temp)
+                self.queues[topic].heap.remove(task)
+                return True
+        return False
+
     def checkStatus(self, topic, task_id):
         """
         Method to check task status.
@@ -238,10 +250,12 @@ class QueueManager(object):
 
         for task in self.success_queue.heap:
             if task.task_id == task_id:
+                self.success_queue.heap.remove(task)
                 return task.status  # Return success status
 
         for task in self.failure_queue.heap:
             if task.task_id == task_id:
+                self.failure_queue.heap.remove(task)
                 return task.status  # Return failure status
 
         return "NOT_FOUND"

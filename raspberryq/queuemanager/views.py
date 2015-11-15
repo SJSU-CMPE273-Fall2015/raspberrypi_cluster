@@ -83,7 +83,9 @@ def dequeue(request, topic):
 @require_http_methods(["POST"])
 def addToSuccessQueue(request):
     """
+     http://127.0.0.1:8000/queue/successq
     {"topic":"<topic>", "task_id":<task_id>}
+
     :param request:
     :return:
     """
@@ -91,6 +93,25 @@ def addToSuccessQueue(request):
     body_data = json.loads(body_unicode)
 
     success = manager.addToSuccessQueue(body_data['topic'], body_data['task_id'])
+    if not success:
+        error = {"error": "Either queue is not present or is Empty", "topic": body_data['topic']}
+        return HttpResponse(json.dumps(error))
+    return HttpResponse("")
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def addToFailureQueue(request):
+    """
+     http://127.0.0.1:8000/queue/failureq
+    {"topic":"<topic>", "task_id":<task_id>}
+    :param request:
+    :return:
+    """
+    body_unicode = request.body.decode('utf-8')
+    body_data = json.loads(body_unicode)
+    print(body_data)
+    success = manager.addToFailureQueue(body_data['topic'], body_data['task_id'])
     if not success:
         error = {"error": "Either queue is not present or is Empty", "topic": body_data['topic']}
         return HttpResponse(json.dumps(error))
