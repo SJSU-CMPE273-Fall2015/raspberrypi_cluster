@@ -61,6 +61,6 @@ master_node/.idea/*
 master_node/.idea/.*
 queue/.idea/
 cluster_node/.idea/
-
+*/.idea/*
 # No temp files
 *~

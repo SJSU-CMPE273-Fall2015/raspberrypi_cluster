@@ -75,6 +75,7 @@ class ClusterProject(models.Model):
 class ProjectBuild(models.Model):
     project = models.ForeignKey(Project, null=True)
     build = models.FileField(null=True)
+    log = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
