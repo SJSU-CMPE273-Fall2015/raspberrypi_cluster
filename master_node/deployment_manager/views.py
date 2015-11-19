@@ -15,21 +15,17 @@ from raspberryq.queuemanager.queue import manager
 
 #Create class just for the purpose of Static Function
 class StaticClass:
-    clusterID = 1
+    id = 1
+    rQIP = "127.0.0.1"
 
 # Method to get the Cluster ID to deploy  on the Slave Node
-def deployClusterID(request, cluster_id):
-    data = json.dumps({'cluster_id': cluster_id})
-    if(StaticClass.clusterID % 2 == 0):
-        topicData = "Build_Manager_Queue"+(StaticClass.clusterID+1)
-        StaticClass.clusterID = 1
-    else:
-        topicData = "Build_Manager_Queue"+ StaticClass.clusterID
-        StaticClass.clusterID += 1
-
-    params = json.dumps({"topic": topicData, "data": data, "priority": 3})
+def deployProject(request, project_id):
+    data = json.dumps({'cluster_id': project_id})
+    topic = "Deployment_Manager_Queue"+(StaticClass.id%2)
+    StaticClass.id += 1
+    params = json.dumps({"topic": topic, "data": data, "priority": 3})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-    conn = http.client.HTTPConnection("localhost:4242")
+    conn = http.client.HTTPConnection(StaticClass.rQIP+":4242")
     conn.request("POST", "/queue/enqueue", params, headers)
     response = conn.getresponse()
     print(response.status, response.reason)
