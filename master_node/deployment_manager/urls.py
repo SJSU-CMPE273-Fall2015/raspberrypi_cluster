@@ -3,5 +3,5 @@ from .import views
 
 urlpatterns = [
     # Deploy it on a Cluster
-    url(r'^deploy/(?<topic>\w{0,50})$', views.dequeue, name='views.deployClusterID'),
+    url(r'^deploy/(?<projectID>\w{0,50})$', views.deployProject, name='views.deployProject'),
 ]
