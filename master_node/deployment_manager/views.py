@@ -8,7 +8,7 @@ from django.http import HttpRequest
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from raspberryq.queuemanager.queue import manager
+#from raspberryq.queuemanager.queue import manager
 
 
 # Create your views here.
@@ -20,8 +20,8 @@ class StaticClass:
 
 # Method to get the Cluster ID to deploy  on the Slave Node
 def deployProject(request, project_id):
-    data = json.dumps({'cluster_id': project_id})
-    topic = "Deployment_Manager_Queue"+(StaticClass.id%2)
+    data = json.dumps({'project_id': project_id})
+    topic = "Deployment_Manager_Queue"+str((StaticClass.id%2))
     StaticClass.id += 1
     params = json.dumps({"topic": topic, "data": data, "priority": 3})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
