@@ -57,10 +57,10 @@ docs/_build/
 target/
 
 # IDE
-.idea/*
-
-# No env folder
-env
-
+master_node/.idea/*
+master_node/.idea/.*
+queue/.idea/
+cluster_node/.idea/
+*/.idea/*
 # No temp files
 *~

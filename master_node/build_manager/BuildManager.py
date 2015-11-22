@@ -34,6 +34,7 @@ def find_project(project_id):
 
     """
     # TODO currently fetching hard coded pk. Implement dynamic handling.
+    project_id = int(project_id)
     p = Project.objects.get(pk=project_id)
     print(p)
 
@@ -87,10 +88,10 @@ def download_python_dependencies(project):
 
 def download_go_dependencies(project):
     popen = subprocess.Popen(["build_manager/scripts/get_dependencies_golang.sh", project_dictionary[project.pk]],
-                    stdout =subprocess.PIPE)
+                             stdout=subprocess.PIPE)
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
-        print(line) # yield line
+        print(line)  # yield line
 
     create_zip(project, GOLANG)
 
