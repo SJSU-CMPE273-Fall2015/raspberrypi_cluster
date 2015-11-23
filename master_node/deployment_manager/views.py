@@ -17,11 +17,12 @@ from django.views.decorators.http import require_http_methods
 class StaticClass:
     id = 1
     rQIP = "127.0.0.1"
+    numberOfClusters = 1
 
 # Method to get the Cluster ID to deploy  on the Slave Node
 def deployProject(request, project_id):
     data = json.dumps({'project_id': project_id})
-    topic = "Deployment_Manager_Queue"+str((StaticClass.id%2))
+    topic = "Deployment_Manager_Queue"+str((StaticClass.id%StaticClass.numberOfClusters ) + 1)
     StaticClass.id += 1
     params = json.dumps({"topic": topic, "data": data, "priority": 3})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
@@ -34,6 +35,8 @@ def deployProject(request, project_id):
     conn.close()
     return HttpResponse(data)
 
+def reportStatus(request):
+    pass
 
 
 
