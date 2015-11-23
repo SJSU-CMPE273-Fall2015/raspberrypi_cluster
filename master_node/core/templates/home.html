@@ -78,24 +78,24 @@
 
         function checkStatus(result){
             $.post("http://127.0.0.1:4242/queue/checkStatus",result,function(data){
-                            alert(data);
-                        });
+                var st = JSON.parse(data)
+                if(st.status="FAILURE"){
+                    var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
+                    $('#image').html("<img src='" + locationString + "' alt='description' />");
+                }
+                else if(st.status="NOT FOUND"){
+                    var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
+                    $('#image').html("<img src='" + locationString + "' alt='description' />");
+                }
+                else if(st.status="SUCCESS"){
+                    var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/success.png";
+                    $('#image').html("<img src='" + locationString + "' alt='description' />");
+                }
+                else{
+                    setInterval(checkStatus, 2);
+                }
+            });
 
-         //if(status="FAILURE"){
-         //      var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
-         //       $('#image').attr('src', locationString);
-         //       }
-         //if else(status="SUCCESS"){
-         //      var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/success.png";
-         //       $('#image').attr('src', locationString);
-         //       }
-         //if else(status="NOT FOUND"){
-         //      var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
-         //       $('#image').attr('src', locationString);
-         //       }
-         //else{
-         //       setInterval(checkStatus, 2);
-         //       }
         }
 </script>
 </body>
