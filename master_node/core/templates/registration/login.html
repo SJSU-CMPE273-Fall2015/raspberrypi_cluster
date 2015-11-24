@@ -2,16 +2,23 @@
 {% block title %}Login{% endblock %}
 {% block head %}Login{% endblock %}
 {% block content %}
+<div class="hero-unit">
+    <div class="container">
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
-    <form method="post" action=".">{% csrf_token %}
+    <form class="form-signin span4" method="post" action=".">
+        <h2 class="form-signin-heading">Please sign in</h2>
+    {% csrf_token %}
         <table border="0">
             <tr><th><label for="id_username">Username:</label></th><td>{{ form.username }}</td></tr>
             <tr><th><label for="id_password">Password:</label></th><td>{{ form.password }}</td></tr>
         </table>
-        <input type="submit" value="Login" />
-        <input type="hidden" name="next" value="/home" />
+        <input type="submit" class="btn btn-primary" value="Login" />
+        <input type="hidden" class="btn btn-primary" name="next" value="/home" />
     </form>
     <a href="/register">Register</a>
+         </div>
+    <!-- /container -->
+</div>
 {% endblock %}
