@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from core.views import *
 from core import views
- 
+
 urlpatterns = patterns('',
     url(r'^$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', logout_page),
@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^insert/$', views.insert, name='insert'),
     url(r'^delete/(?P<project_id>\d+)$', views.delete, name='delete'),
     url(r'^edit/(?P<project_id>\d+)$', views.edit, name='edit'),
-    url(r'^info/$', views.info, name='info')
+    url(r'^info/$', views.info, name='info'),
+    url(r'^checkStatus/$', views.checkStatus, name='CheckStatus')
 )

@@ -77,7 +77,7 @@
         });
 
         function checkStatus(result){
-            $.post("http://127.0.0.1:4242/queue/checkStatus",result,function(data){
+            $.post("/checkStatus",result,function(data){
                 var st = JSON.parse(data)
                 if(st.status="FAILURE"){
                     var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
