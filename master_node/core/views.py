@@ -1,16 +1,18 @@
-from django.shortcuts import render
+import json
+import http.client
+
 from core.forms import *
 from django.contrib.auth import logout
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.template import loader, Context, RequestContext
+from django.views.decorators.http import require_http_methods
 from .models import Project
 from .models import ClusterProject
 from .models import ProjectAudit
 from .models import ProjectBuild
-
 
 
 @csrf_protect
@@ -98,3 +100,18 @@ def info(request):
     t = loader.get_template('info.html')
     c = Context({'build': build}, {'deploy': deploy}, {'dyno': dyno})
     return HttpResponse(t.render(c))
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def checkStatus(request):
+    body_unicode = request.body.decode('utf-8')
+    body_data = json.loads(body_unicode)
+    params = json.dumps(body_data)
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+    conn = http.client.HTTPConnection("localhost:4242")
+    conn.request("POST", "/queue/checkStatus", params, headers)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+    return HttpResponse(data)
