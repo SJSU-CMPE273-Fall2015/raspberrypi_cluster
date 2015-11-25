@@ -78,7 +78,7 @@
         });
 
         function checkStatus(result){
-            $.post("/checkStatus",result,function(data){
+            $.post("/checkStatus/",result,function(data){
                 console.log(result);
                 var st = JSON.parse(data)
                 if(st.status=="FAILURE"){
