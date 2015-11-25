@@ -2,7 +2,7 @@ __author__ = 'saurabh'
 import http.client, urllib.parse
 from django.apps import AppConfig
 import json
-from .BuilderWorker import startWorker
+from .BuildWorker import startWorker
 import threading
 
 
