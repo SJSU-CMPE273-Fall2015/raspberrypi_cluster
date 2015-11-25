@@ -7,6 +7,6 @@ from .models import Cluster, ClusterProject, Project, ProjectAudit, ProjectBuild
 admin.site.register(Cluster)
 admin.site.register(ClusterProject)
 admin.site.register(Project)
-admin.site.register(ProjectAudit)
-admin.site.register(ProjectBuild)
+#admin.site.register(ProjectAudit)
+#admin.site.register(ProjectBuild)
 admin.site.register(SystemAudit)

@@ -1,9 +1,8 @@
 __author__ = 'saurabh'
-import http.client, urllib.parse
-from django.apps import AppConfig
+import http.client
 import json
-from .BuilderWorker import startWorker
-import threading
+
+from django.apps import AppConfig
 
 
 class BuildManagerConfig(AppConfig):
