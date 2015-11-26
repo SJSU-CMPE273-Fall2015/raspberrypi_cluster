@@ -41,7 +41,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'corsheaders',
     'core',
-    'build_manager'
+    'build_manager',
+    'deployment_manager',
+    'dyno_manager'
+
 )
 
 MIDDLEWARE_CLASSES = (

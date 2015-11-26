@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import http.client, urllib.parse
 from .BuildManager import *
 import json
-from .BuilderWorker import startWorker
+from .BuildWorker import startWorker
 import threading
 
 

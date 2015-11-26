@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^build/', include('build_manager.urls')),
     url(r'^dyno/', include('dyno_manager.urls')),
     url(r'^', include('core.urls')),
+    url(r'^deploy/', include('deployment_manager.urls')),
 ]
