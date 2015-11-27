@@ -1,35 +1,68 @@
 <!DOCTYPE html>
-{% block head %}Create/Update Project{% endblock %}
 {% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Create Project</title>
-    <link href="{% static 'css/bootstrap-fluid-adj.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
-    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+
+    <link id="bootstrap-style" href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-responsive.min.css' %}" rel="stylesheet">
+    <link id="base-style" href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link id="base-style-responsive" href="% static 'css/style-responsive.css' %}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
+<div class="navbar">
+		<div class="navbar-inner">
+				<span class="brand">{% block head %}Create/Update Project{% endblock %}</span>
+		</div>
+</div>
 {% block content %}
 <div class="hero-unit">
     <br />
 
-    <div class="container">
-<form class="form-signin span8" method="post">
+<div class="container">
+<div class="row-fluid sortable">
+<div class="box span12">
+	<div class="box-header" data-original-title>
+		<h2><strong>Current Projects</strong></h2>
+	</div>
+<div class="box-content">
+<form class="form-horizontal" method="post">
+<fieldset>
     {% csrf_token %}
-    <label>Project Name: </label>
-    <input name="project_name" value="{{project.project_name}}">
-    <br>
-    <label>Project URL: </label>
-    <input name="url"  value="{{project.url}}">
-    <br>
-    <label>Project Owner: </label>
-    <input name="owner"  value="{{user.username}}">
-    <br>
-    <input type="hidden" class="btn btn-primary" name="id" value="{{project.id}}">
-    <input type="submit" class="btn btn-primary" value="Submit">
+	<div class="control-group">
+		<label class="control-label" for="focusedInput">Project Name:</label>
+		<div class="controls">
+			<input class="input-xlarge focused" name="project_name" id="focusedInput" type="text" value="{{project.project_name}}">
+		</div>
+	</div>
+    	<br>
+	<div class="control-group">
+		<label class="control-label" for="focusedInput">Project URL:</label>
+		<div class="controls">
+			<input class="input-xlarge focused" name="url" id="focusedInput" type="text" value="{{project.url}}">
+		</div>
+	</div>
+    	<br>
+	<div class="control-group">
+		<label class="control-label">Project Owner:</label>
+		<div class="controls">
+			<input name="owner" class="input-xlarge uneditable-input" value="{{user.username}}">
+		</div>
+	</div>
+    	<br>
+	<div class="form-actions">
+		<input type="hidden" class="btn btn-primary" name="id" value="{{project.id}}">
+		<button type="submit" class="btn btn-primary">Save Project</button>
+		<button class="btn">Cancel</button>
+	</div>
+</fieldset>
 </form>
-        </div>
+</div>
+</div>
+</div>
+</div>
 </div>
 {% endblock %}
     <script src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
