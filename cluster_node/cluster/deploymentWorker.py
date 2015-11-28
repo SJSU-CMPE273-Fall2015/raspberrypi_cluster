@@ -8,6 +8,9 @@ import json
 import time
 import traceback
 import configparser
+import zipfile
+import os
+from subprocess import Popen,PIPE
 
 from django.http import HttpResponse
 
@@ -59,8 +62,17 @@ class NodeClusterManager:
                     addToQueue(True,request)
                     #add logic to extract zip files and to make POST call to the Server and pass the cluster_id and Project_id
                     #topic =
-                    post_data = {'cluster_id' : cluster_id,'project_id' : task['project_id']}
-
+                    post_data = json.dumps({'cluster_id' : cluster_id,'project_id' : task['project_id']})
+                    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+                    conn = http.client.HTTPConnection(master_ip)
+                    conn.request("POST", "/deployment_manager/reportStatus", post_data, headers)
+                    response = conn.getresponse()
+                    print(response.status,response.reason)
+                    data = response.read
+                    print(data)
+                    conn.close()
+                    #Call to get the process id of the process that has been started recently from our end
+                    #getProcessID()
 
                 except Exception:
                     print(traceback.format_exc())
@@ -68,8 +80,59 @@ class NodeClusterManager:
                     print("Exception Occurred",request)
 
 
+#Get the process id of the python prog started through the runserver command and return its PID.
+def getProcessID():
+    pids = []
+    list = os.popen("tasklist").readlines()
+    for program in list:
+        try:
+            pids.append(int(program[29:34]))
+        except:
+            pass
+        for each in pids:
+            print(each)
+
+
+
 def deployProject(task):
     print("DEPLOYING PROJECT#", task['project_id'])
+
+    fh = open("~\\Desktop\\abcd.zip")
+    z = zipfile.ZipFile(fh)
+
+    for name in z.namelist():
+        outpath = "~\\Desktop\\ZipFolder"
+        z.extract(name,outpath)
+
+    dataFile = file("~Desktop\\ZipFolder\\run.txt")
+    for line in dataFile:
+        if ".go" in line:
+            print("GO File Present")
+        else :
+            if ".py" in line:
+                print("Python File Present")
+                errorExists = executeFile()
+                if errorExists == True:
+                    return
+                else :
+                    print("Need to get the Process ID function")
+            else :
+                print("Error , no file present")
+
+
+def executeFile():
+    print("In the function for running the executable file")
+    cmd = "manage.py runserver ~/"
+    p = Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE)
+    out,err = p.communicate()
+    print("Return Code:" +p.returncode)
+    print(out.rstrip())
+    print(err.rstrip())
+    error = err.rstrip()
+    if not error:
+        return False
+    else:
+        return True
 
 
 def addToQueue(success, request):
