@@ -1,13 +1,16 @@
 # Create your views here.
-from django.http import HttpResponse
-import http.client, urllib.parse
-from .BuildManager import *
+import http.client
 import json
-from .BuildWorker import startWorker
 import threading
+
+from django.http import HttpResponse
+from .BuildWorker import startWorker
+
+workerStarted = False
 
 
 def index(request, project_id):
+    global workerStarted
     data = json.dumps({'project_id': project_id})
     params = json.dumps({"topic": "Build_Manager_Queue1", "data": data, "priority": 3})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
@@ -18,6 +21,8 @@ def index(request, project_id):
     data = response.read()
     print(data)
     conn.close()
-    thread = threading.Thread(target=startWorker)
-    thread.start()
+    if not workerStarted:
+        thread = threading.Thread(target=startWorker)
+        thread.start()
+        workerStarted = True
     return HttpResponse(data)
