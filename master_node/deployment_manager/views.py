@@ -24,6 +24,7 @@ class StaticClass:
 # Method to get the Cluster ID to deploy  on the Slave Node
 def deployProject(request, project_id):
     data = json.dumps({'project_id': project_id})
+    print(data)
     topic = "Deployment_Manager_Queue"+str((StaticClass.id%StaticClass.numberOfClusters ) + 1)
     StaticClass.id += 1
     params = json.dumps({"topic": topic, "data": data, "priority": 3})
@@ -41,7 +42,7 @@ def reportStatus(request):
     data_project_id = json.loads(request['project_id'])
     data_cluster_id = json.loads(request['cluster_id'])
     data_url = json.loads(request['url'])
-    data_pid = json.loads(request['pid'])
+    #data_pid = json.loads(request['pid'])
 
     # Add the entry to the DataBase and to models.py,parse the corresponding entry
     ClusterProject.cluster = data_cluster_id
@@ -49,7 +50,7 @@ def reportStatus(request):
     ClusterProject.status = "Deployed"
     ClusterProject.time = datetime.datetime.now()
     ClusterProject.url = data_url
-    ClusterProject.pid = data_pid
+    ClusterProject.pid = 1
 
     ClusterProject.save()
 

@@ -25,7 +25,7 @@ GOLANG = "go_"
 project_dictionary = {}
 
 # Base url to store cloned project
-base_path = "/home/saurabh/Desktop/"
+base_path = "/home/adityasharma/Desktop/"
 script_path = os.getcwd()
 
 def find_project(project_id):
