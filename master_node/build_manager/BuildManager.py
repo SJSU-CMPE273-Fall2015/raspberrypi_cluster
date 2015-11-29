@@ -7,7 +7,7 @@ import subprocess
 import os
 import random
 from git import Repo
-from core.models import Project
+from core.models import Project, ProjectBuild
 import tarfile
 
 
@@ -25,8 +25,8 @@ GOLANG = "go_"
 project_dictionary = {}
 
 # Base url to store cloned project
-base_path = "/home/saurabh/Desktop/"
-
+base_path = "/home/adityasharma/Desktop/"
+script_path = os.getcwd()
 
 def find_project(project_id):
     """
@@ -81,13 +81,13 @@ def download_python_dependencies(project):
     Download dependencies for the project.
     :param project:
     """
-    subprocess.call(["build_manager/scripts/get_dependencies_python.sh", project_dictionary[project.pk]],
+    subprocess.call([script_path + "/build_manager/scripts/get_dependencies_python.sh", project_dictionary[project.pk]],
                     stdout=subprocess.PIPE)
     create_zip(project, PYTHON)
 
 
 def download_go_dependencies(project):
-    popen = subprocess.Popen(["build_manager/scripts/get_dependencies_golang.sh", project_dictionary[project.pk]],
+    popen = subprocess.Popen([script_path +"/build_manager/scripts/get_dependencies_golang.sh", project_dictionary[project.pk]],
                              stdout=subprocess.PIPE)
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
@@ -101,6 +101,8 @@ def create_zip(project, language):
     The function to create the slug.
     :param project:
     """
+
+    filepath = base_path + language + project_dictionary[project.pk] + '.tar.gz'
     tar = tarfile.open(base_path + language + project_dictionary[project.pk] + '.tar.gz', mode='w:gz')
     try:
         # zf.write(base_path + project_dictionary[project.pk])
@@ -112,6 +114,15 @@ def create_zip(project, language):
 
     finally:
         tar.close()
+
+    update_database(project, filepath)
+
+
+def update_database(project, filepath):
+    project_build = ProjectBuild()
+    project_build.project_id = project.id
+    project_build.build.name = filepath
+    project_build.save()
 
 
 def remove_old_dir():

@@ -5,4 +5,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.systemstatus, name='views.systemstatus'),
+    url(r'^register$', views.registerCluster, name='views.registerCluster'),
 ]
