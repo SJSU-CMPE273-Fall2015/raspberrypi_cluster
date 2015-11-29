@@ -50,7 +50,7 @@
                 <td>{{project.url}}</td>
                 <td>{{project.owner}}</td>
                 <td>{{project.last_build_time}}</td>
-                <td id="image"></td>
+                <td id="image{{project.id}}"></td>
                 <td>{{project.created_time}}</td>
                 <td class="center">
                     <button type="button" class="btn btn-warning" onclick="location.href='/edit/{{project.id}}';">Edit</button>&nbsp;&nbsp;
@@ -81,12 +81,12 @@
             xmlHttp.send( null );
             return xmlHttp.responseText;
     	}*/
-
+        var projectId
         $(document).ready(function(){
             $(".build_button").click(function(){
                 var imgUrl = $(this).attr('rel');
-                var projectId = $(this).attr('id');
-                $("#image").html("<img src='" + imgUrl + "' alt='description' />");
+                projectId = $(this).attr('id');
+                $("#image"+projectId).html("<img src='" + imgUrl + "' alt='description' />");
                 $.ajax({url: "/build/" + projectId , success: function(result){
                         checkStatus(result);
                      }});
@@ -99,19 +99,19 @@
                 var st = JSON.parse(data)
                 if(st.status=="FAILURE"){
                     var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
-                    $('#image').html("<img src='" + locationString + "' alt='description' width='32' height='32'/>");
+                    $('#image'+projectId).html("<img src='" + locationString + "' alt='description' width='32' height='32'/>");
                     clearTimeout(repeat);
                     return;
                 }
                 else if(st.status=="NOT FOUND"){
                     var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
-                    $('#image').html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
+                    $('#image'+projectId).html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
                     clearTimeout(repeat);
                     return;
                 }
                 else if(st.status=="SUCCESS"){
                     var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/success.png";
-                    $('#image').html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
+                    $('#image'+projectId).html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
                     clearTimeout(repeat);
                     return;
                 }
