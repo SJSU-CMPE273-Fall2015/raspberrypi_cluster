@@ -50,8 +50,17 @@ class SystemAudit(models.Model):
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.cluster + ":" + self.time
+        return str(self.cluster) + ":" + str(self.time)
 
+    def to_dict(self):
+        data={}
+        data['disk_usage']=self.disk_usage
+        data['memory_usage']=self.memory_usage
+        data['cpu_usage']=self.cpu_usage
+        data['network_usage']=self.network_usage
+        data['cluster']=self.cluster.ip
+        data['time']=self.time
+        return data
 
 class ProjectAudit(models.Model):
     message = models.CharField(max_length=255, null=True)

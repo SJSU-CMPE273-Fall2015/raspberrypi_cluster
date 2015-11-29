@@ -38,3 +38,18 @@ def registerCluster(request):
     reply['boot_time'] = str(cluster.last_boot_time)
     return HttpResponse(json.dumps(reply))
 
+def getStats(request):
+    clusters = Cluster.objects.filter(status='active')
+    for cluster in clusters:
+        body_unicode = request.body.decode('utf-8')
+        stats = SystemAudit.objects.filter(cluster_id=cluster.id).order_by('time').reverse()[:10]
+        print("=========================================")
+        
+
+
+    return HttpResponse(json.dumps(stats),mimetype="application/json")
+
+
+
+
+
