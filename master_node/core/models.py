@@ -68,6 +68,9 @@ class ClusterProject(models.Model):
     project = models.ForeignKey(Project, null=True)
     status = models.CharField(max_length=255, null=True)
     time = models.DateTimeField(auto_now_add=True)
+    #newly added.
+    url = models.CharField(max_length=255, null=True)
+    pid = models.IntegerField(blank=False)
 
     def __str__(self):
         return self.cluster + ":" + self.project

@@ -2,18 +2,20 @@ from django.shortcuts import render
 
 import json
 import http.client
+import datetime
 
 from django.http import HttpResponse
 from django.http import HttpRequest
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-#from raspberryq.queuemanager.queue import manager
-
+from core.models import ClusterProject
 
 # Create your views here.
 
 #Create class just for the purpose of Static Function
+
+
 class StaticClass:
     id = 1
     rQIP = "127.0.0.1"
@@ -22,6 +24,7 @@ class StaticClass:
 # Method to get the Cluster ID to deploy  on the Slave Node
 def deployProject(request, project_id):
     data = json.dumps({'project_id': project_id})
+    print(data)
     topic = "Deployment_Manager_Queue"+str((StaticClass.id%StaticClass.numberOfClusters ) + 1)
     StaticClass.id += 1
     params = json.dumps({"topic": topic, "data": data, "priority": 3})
@@ -36,7 +39,20 @@ def deployProject(request, project_id):
     return HttpResponse(data)
 
 def reportStatus(request):
-    pass
+    data_project_id = json.loads(request['project_id'])
+    data_cluster_id = json.loads(request['cluster_id'])
+    data_url = json.loads(request['url'])
+    #data_pid = json.loads(request['pid'])
+
+    # Add the entry to the DataBase and to models.py,parse the corresponding entry
+    ClusterProject.cluster = data_cluster_id
+    ClusterProject.project = data_project_id
+    ClusterProject.status = "Deployed"
+    ClusterProject.time = datetime.datetime.now()
+    ClusterProject.url = data_url
+    ClusterProject.pid = 1
+
+    ClusterProject.save()
 
 
 
