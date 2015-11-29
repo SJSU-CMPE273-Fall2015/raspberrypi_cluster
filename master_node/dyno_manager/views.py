@@ -1,8 +1,8 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 import json
+
 from core.models import SystemAudit, Cluster
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 @csrf_exempt
@@ -27,7 +27,14 @@ def registerCluster(request):
     cluster.ip = clusterData['ip']
     cluster.location = clusterData['location']
     cluster.type = clusterData['type']
-    cluster.last_boot_time = clusterData['last_boot_time']
     cluster.status='active'
     cluster.save()
+
+    reply = {}
+    reply['ip'] = cluster.ip
+    reply['location'] = cluster.location
+    reply['type'] = cluster.type
+    reply['id'] = cluster.id
+    reply['boot_time'] = str(cluster.last_boot_time)
+    return HttpResponse(json.dumps(reply))
 
