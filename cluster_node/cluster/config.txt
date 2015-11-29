@@ -1,5 +1,6 @@
 [CONFIGURATION]
-    MASTER_IP=127.0.0.1:8000
-    CLUSTER_ID = 1
-    RQ_ID=127.0.0.1:4242
-    NUMBER_OF_CLUSTERS = 2
+master_ip = 127.0.0.1:8000
+cluster_id = 51
+rq_id = 127.0.0.1:4242
+number_of_clusters = 2
+
