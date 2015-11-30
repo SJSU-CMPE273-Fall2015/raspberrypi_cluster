@@ -743,18 +743,17 @@ function circle_progess() {
 		
 		var value = $(this).find(".value > .number").html();
 		var unit = $(this).find(".value > .unit").html();
-		var percent = $(this).find("input").val()/100;
+
+		//countSpeed = 2300*percent;
 		
-		countSpeed = 2300*percent;
-		
-		endValue = value*percent;
+		//endValue = value*percent;
 		
 		$(this).find(".count > .unit").html(unit);
 		$(this).find(".count > .number").countTo({
 			
 			from: 0,
-		    to: endValue,
-		    speed: countSpeed,
+		    //to: endValue,
+		   // speed: countSpeed,
 		    refreshInterval: 50
 		
 		});
@@ -1681,36 +1680,30 @@ function charts() {
 		});
 	}
 
-
-
-
 	 // we use an inline data source in the example, usually data would
 	// be fetched from a server
-	var data = [], totalPoints = 300;
+	var data = [], totalPoints = 30;
 	function getRandomData() {
-		if (data.length > 0)
-			data = data.slice(1);
-
-		// do a random walk
-		while (data.length < totalPoints) {
-			var prev = data.length > 0 ? data[data.length - 1] : 50;
-			var y = prev + Math.random() * 10 - 5;
-			if (y < 0)
-				y = 0;
-			if (y > 100)
-				y = 100;
-			data.push(y);
-		}
-
-		// zip the generated y values with the x values
 		var res = [];
+        if (data.length > 0)
+			data = data.slice(1);
+		$.ajax({
+        		url:"http://localhost:8000/dyno/systemstats",
+        		dataType : 'json',
+        		async : false,
+        		success : function(result) {
+            	$.each(result.cpu, function(key, val) { data.push(val[1]); });
+            }
+			});
+
 		for (var i = 0; i < data.length; ++i)
 			res.push([i, data[i]])
+
 		return res;
 	}
 
 	// setup control widget
-	var updateInterval = 30;
+	var updateInterval = 5000;
 	$("#updateInterval").val(updateInterval).change(function () {
 		var v = $(this).val();
 		if (v && !isNaN(+v)) {
@@ -1724,29 +1717,6 @@ function charts() {
 	});
 
 	/* ---------- Realtime chart ---------- */
-	if($("#serverLoad").length)
-	{	
-		var options = {
-			series: { shadowSize: 1 },
-			lines: { show: true, lineWidth: 3, fill: true, fillColor: { colors: [ { opacity: 0.9 }, { opacity: 0.9 } ] }},
-			yaxis: { min: 0, max: 100, tickFormatter: function (v) { return v + "%"; }},
-			xaxis: { show: false },
-			colors: ["#FA5833"],
-			grid: {	tickColor: "#f9f9f9",
-					borderWidth: 0, 
-			},
-		};
-		var plot = $.plot($("#serverLoad"), [ getRandomData() ], options);
-		function update() {
-			plot.setData([ getRandomData() ]);
-			// since the axes don't change, we don't need to call plot.setupGrid()
-			plot.draw();
-			
-			setTimeout(update, updateInterval);
-		}
-
-		update();
-	}
 	
 	if($("#serverLoad2").length)
 	{	

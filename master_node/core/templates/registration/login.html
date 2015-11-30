@@ -13,7 +13,7 @@
 
 <div class="navbar">
 		<div class="navbar-inner">
-				<span class="brand">{% block head %}Login Page{% endblock %}</span>	
+				<b><span class="brand">{% block head %}Login Page{% endblock %}</span></b>
 		</div>
 </div>
     {% block content %}
@@ -24,7 +24,7 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
         <div class="container-fluid-full">
         <br />
-            <div class="row-fluid">
+            <div class="row-fluid"><center>
                 {% if form.errors %}
                  <p>Your username and password didn't match. Please try again.</p>
                 {% endif %}
@@ -36,13 +36,13 @@
                     <table border="0">
                         <tr><th><label for="id_username">Username:</label></th><td>{{ form.username }}</td></tr><br>
                         <tr><th><label for="id_password">Password:</label></th><td>{{ form.password }}</td></tr>
-                    </table>
-                    <input type="submit" class="btn btn-primary" value="Login" />&nbsp
+                    </table><br>
+                    &nbsp;<input type="submit" class="btn btn-primary" value="Login" />&nbsp
                     <input type="hidden" class="btn btn-primary" name="next" value="/home" />
 		    <a class="btn btn-primary" href="/register">Register</a>
 		</fieldset>
                 </form>
-		</div>
+		</div></center>
             </div>
         </div>
     {% endblock %}
