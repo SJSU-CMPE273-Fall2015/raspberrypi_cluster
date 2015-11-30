@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 </head>
-<body onload="gauge1.update(MemValue()); gauge2.update(DiskValue()); gauge3.update(NetworkValue())">
+<body onload="Call();">
 {% block content %}
 <div class="navbar">
     <div class="navbar-inner">
@@ -86,8 +86,6 @@
                 {% else %}
                 <p>No project in the database</p>
                 {% endif %}
-
-
             </div>
         </div>
     </div>
@@ -104,9 +102,6 @@
         </div>
     </div>
     <div class="box-content">
-
-                <div class="header">Disk Space Usage</div>
-
                 <svg id="fillgauge1" width="19%" height="200"></svg>
 				<svg id="fillgauge2" width="19%" height="200"></svg>
 				<svg id="fillgauge3" width="19%" height="200"></svg>
@@ -114,7 +109,7 @@
 
 
 	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
-            <h2><span class="glyphicons fire"><i></i></span> Server Load</h2>
+            <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
                 <div id="serverLoad2" style="height:105px;"></div>
@@ -125,52 +120,6 @@
 </div>
 </div>
 </div>
-
-        <!--
-                        <div class="span2" onTablet="span4" onDesktop="span2">
-                            <div class="circleStatsItemBox greenDark">
-                                <div class="header">Bandwidth</div>
-                                <span class="percent">percent</span>
-                                <div class="circleStat">
-                                    <input type="text" value="78" class="whiteCircle" />
-                                </div>
-                                <div class="footer">
-                                    <span class="count">
-                                        <span class="number">5000</span>
-                                        <span class="unit">GB</span>
-                                    </span>
-                                    <span class="sep"> / </span>
-                                    <span class="value">
-                                        <span class="number">5000</span>
-                                        <span class="unit">GB</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="span2" onTablet="span4" onDesktop="span2">
-                            <div class="circleStatsItemBox pink">
-                                <div class="header">Memory</div>
-                                <span class="percent">percent</span>
-                                <div class="circleStat">
-                                    <input type="text" value="1" class="whiteCircle" />
-                                </div>
-                                <div class="footer">
-                                    <span class="count">
-                                        <span class="number">64</span>
-                                        <span class="unit">GB</span>
-                                    </span>
-                                    <span class="sep"> / </span>
-                                    <span class="value">
-                                        <span class="number">64</span>
-                                        <span class="unit">GB</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-        -->
-
-
 <!-- End MAster Node -->
 <!--
 				<div class="box span12">
@@ -436,7 +385,6 @@
 <script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script src="{% static 'js/liquidFillGauge.js' %}"></script>
-<script src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/jquery-migrate-1.0.0.min.js' %}"></script>
 <script src="{% static 'js/jquery-ui-1.10.0.custom.min.js' %}"></script>
@@ -517,34 +465,43 @@
 </script>
 <script language="JavaScript">
     var config1 = liquidFillGaugeDefaultSettings();
-    config1.circleColor = "#FF7777";
-    config1.textColor = "#FF4444";
-    config1.waveTextColor = "#FFAAAA";
-    config1.waveColor = "#FFDDDD";
-    config1.circleThickness = 0.2;
-    config1.textVertPosition = 0.2;
+    config1.circleColor = "#7e3878";
+    config1.textColor = "#232323";
+    config1.waveTextColor = "#232323";
+    config1.waveColor = "#7e3878";
+    config1.circleThickness = 0.1;
+    config1.textVertPosition = 0.52;
     config1.waveAnimateTime = 1000;
 
-	var gauge1 = loadLiquidFillGauge("fillgauge1", 0.2, config1);
-	var gauge2 = loadLiquidFillGauge("fillgauge2", 0.2, config5);
-	var gauge3 = loadLiquidFillGauge("fillgauge3", 0.2, config1);
-    var config5 = liquidFillGaugeDefaultSettings();
-    config5.circleThickness = 0.4;
-    config5.circleColor = "#6DA398";
-    config5.textColor = "#0E5144";
-    config5.waveTextColor = "#6DA398";
-    config5.waveColor = "#246D5F";
-    config5.textVertPosition = 0.52;
-    config5.waveAnimateTime = 5000;
-    config5.waveHeight = 0;
-    config5.waveAnimate = false;
-    config5.waveCount = 2;
-    config5.waveOffset = 0.25;
-    config5.textSize = 1.2;
-    config5.minValue = 0;
-    config5.maxValue = 100
-    config5.displayPercent = false;
+    var config2 = liquidFillGaugeDefaultSettings();
+    config2.circleColor = "#ffc40d";
+    config2.textColor = "#232323";
+    config2.waveTextColor = "#232323";
+    config2.waveColor = "#ffc40d";
+    config2.circleThickness = 0.1;
+    config2.textVertPosition = 0.52;
+    config2.waveAnimateTime = 1000;
 
+    var config3 = liquidFillGaugeDefaultSettings();
+    config3.circleColor = "#00868B";
+    config3.textColor = "#232323";
+    config3.waveTextColor = "#232323";
+    config3.waveColor = "#00868B";
+    config3.circleThickness = 0.1;
+    config3.textVertPosition = 0.52;
+    config3.waveAnimateTime = 1000;
+
+	var gauge1 = loadLiquidFillGauge("fillgauge1", 0.2, config2);
+	var gauge2 = loadLiquidFillGauge("fillgauge2", 0.2, config1);
+	var gauge3 = loadLiquidFillGauge("fillgauge3", 0.2, config3);
+
+	function Call(){
+	console.log("Entering call function");
+	gauge1.update(MemValue(), 5000);
+	gauge2.update(DiskValue(), 5000);
+	gauge3.update(NetworkValue(), 5000);
+	setTimeout(Call, 5000);
+	}
     function MemValue(){
     		var res = [];
 			$.ajax({
@@ -557,11 +514,12 @@
             }
 			});
 			console.log(res[0]);
-            return res[0];
-		setTimeout(MemValue, 5000);
+            return(res[0]);
+
     }
 	function DiskValue(){
 			var res = [];
+
 			$.ajax({
         		url:"http://localhost:8000/dyno/systemstats",
         		dataType : 'json',
@@ -570,12 +528,12 @@
 				res[0]=result.disk
             }
 			});
-			return res[0];
-		setTimeout(DiskValue, 5000);
-	 }
 
+			return res[0];
+	 }
 	function NetworkValue(){
 			var res = [];
+			setTimeout(NetworkValue, 5000);
 			$.ajax({
         		url:"http://localhost:8000/dyno/systemstats",
         		dataType : 'json',
@@ -585,7 +543,6 @@
             }
 			});
 			return res[0];
-		setTimeout(NetworkValue, 5000);
 	}
 </script>
 </body>
