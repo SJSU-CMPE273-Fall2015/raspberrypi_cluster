@@ -1683,8 +1683,10 @@ function charts() {
 	 // we use an inline data source in the example, usually data would
 	// be fetched from a server
 	var data = [], totalPoints = 30;
+	var res1 = [];
 	function getRandomData() {
 		var res = [];
+
         if (data.length > 0)
 			data = data.slice(1);
 		$.ajax({
@@ -1693,6 +1695,9 @@ function charts() {
         		async : false,
         		success : function(result) {
             	$.each(result.cpu, function(key, val) { data.push(val[1]); });
+            	res1[0]=result.memory;
+				res1[1]=result.disk;
+				res1[2]=result.network;
             }
 			});
 
@@ -1735,7 +1740,40 @@ function charts() {
 			plot.setData([ getRandomData() ]);
 			// since the axes don't change, we don't need to call plot.setupGrid()
 			plot.draw();
-			
+			var config1 = liquidFillGaugeDefaultSettings();
+    config1.circleColor = "#7e3878";
+    config1.textColor = "#232323";
+    config1.waveTextColor = "#232323";
+    config1.waveColor = "#7e3878";
+    config1.circleThickness = 0.1;
+    config1.textVertPosition = 0.52;
+    config1.waveAnimateTime = 1000;
+
+    var config2 = liquidFillGaugeDefaultSettings();
+    config2.circleColor = "#ffc40d";
+    config2.textColor = "#232323";
+    config2.waveTextColor = "#232323";
+    config2.waveColor = "#ffc40d";
+    config2.circleThickness = 0.1;
+    config2.textVertPosition = 0.52;
+    config2.waveAnimateTime = 1000;
+
+    var config3 = liquidFillGaugeDefaultSettings();
+    config3.circleColor = "#00868B";
+    config3.textColor = "#232323";
+    config3.waveTextColor = "#232323";
+    config3.waveColor = "#00868B";
+    config3.circleThickness = 0.1;
+    config3.textVertPosition = 0.52;
+    config3.waveAnimateTime = 1000;
+
+	var gauge1 = loadLiquidFillGauge("fillgauge1", 0.2, config2);
+	var gauge2 = loadLiquidFillGauge("fillgauge2", 0.2, config1);
+	var gauge3 = loadLiquidFillGauge("fillgauge3", 0.2, config3);
+
+			gauge1.update(res1[0]);
+			gauge2.update(res1[1]);
+			gauge3.update(res1[2]);
 			setTimeout(update, updateInterval);
 		}
 

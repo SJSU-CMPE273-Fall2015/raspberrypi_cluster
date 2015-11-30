@@ -60,7 +60,7 @@
                     <button type="button" class="btn btn-lg btn-warning" data-toggle="tooltip" data-placement="top" title="Edit" onclick="location.href='/edit/{{project.id}}';"><i class="halflings-icon white edit"></i></button>
                     <button type="button" class="btn btn-lg btn-danger" data-toggle="tooltip" data-placement="top" title="Delete" onclick="location.href='/delete/{{project.id}}';"><i class="halflings-icon white trash"></i></button>
                     <button type="button" id="{{project.id}}" data-toggle="tooltip" data-placement="top" title="Build" class="build_button btn btn-lg btn-info" rel="/home/sayalee/raspberrypi_cluster/master_node/core/static/img/load.gif"><i class="halflings-icon white cog"></i></button>
-                    <button type="button" class="btn btn-lg btn-success" data-toggle="tooltip" data-placement="top" title="Deploy" onclick="location.href='/deploy/{{project.id}}';"><i class="halflings-icon white download-alt"></i></button>
+                    <button type="button" class="deploy_button btn btn-lg btn-success" data-target="{{project.id}}" data-toggle="tooltip" data-placement="top" title="Deploy" rel="/home/sayalee/raspberrypi_cluster/master_node/core/static/img/load.gif"><i class="halflings-icon white download-alt"></i></button>
                 </td>
             </tr>
             </tbody>
@@ -92,6 +92,16 @@
                 projectId = $(this).attr('id');
                 $("#image"+projectId).html("<img src='" + imgUrl + "' alt='description' />");
                 $.ajax({url: "/build/" + projectId , success: function(result){
+                        checkStatus(result);
+                     }});
+            });
+
+
+            $(".deploy_button").click(function(){
+                var imgUrl = $(this).attr('rel');
+                projectId = $(this).attr('data-target');
+                $("#image"+projectId).html("<img src='" + imgUrl + "' alt='description' />");
+                $.ajax({url: "/deploy/" + projectId , success: function(result){
                         checkStatus(result);
                      }});
             });

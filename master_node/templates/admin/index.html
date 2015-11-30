@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 </head>
-<body onload="Call();">
+<body>
 {% block content %}
 <div class="navbar">
     <div class="navbar-inner">
@@ -462,88 +462,6 @@
 
         }
 
-</script>
-<script language="JavaScript">
-    var config1 = liquidFillGaugeDefaultSettings();
-    config1.circleColor = "#7e3878";
-    config1.textColor = "#232323";
-    config1.waveTextColor = "#232323";
-    config1.waveColor = "#7e3878";
-    config1.circleThickness = 0.1;
-    config1.textVertPosition = 0.52;
-    config1.waveAnimateTime = 1000;
-
-    var config2 = liquidFillGaugeDefaultSettings();
-    config2.circleColor = "#ffc40d";
-    config2.textColor = "#232323";
-    config2.waveTextColor = "#232323";
-    config2.waveColor = "#ffc40d";
-    config2.circleThickness = 0.1;
-    config2.textVertPosition = 0.52;
-    config2.waveAnimateTime = 1000;
-
-    var config3 = liquidFillGaugeDefaultSettings();
-    config3.circleColor = "#00868B";
-    config3.textColor = "#232323";
-    config3.waveTextColor = "#232323";
-    config3.waveColor = "#00868B";
-    config3.circleThickness = 0.1;
-    config3.textVertPosition = 0.52;
-    config3.waveAnimateTime = 1000;
-
-	var gauge1 = loadLiquidFillGauge("fillgauge1", 0.2, config2);
-	var gauge2 = loadLiquidFillGauge("fillgauge2", 0.2, config1);
-	var gauge3 = loadLiquidFillGauge("fillgauge3", 0.2, config3);
-
-	function Call(){
-	console.log("Entering call function");
-	gauge1.update(MemValue(), 5000);
-	gauge2.update(DiskValue(), 5000);
-	gauge3.update(NetworkValue(), 5000);
-	setTimeout(Call, 5000);
-	}
-    function MemValue(){
-    		var res = [];
-			$.ajax({
-        		url:"http://localhost:8000/dyno/systemstats",
-        		dataType : 'json',
-        		async : false,
-        		success : function(result) {
-        		console.log(result.memory);
-				res[0]=result.memory
-            }
-			});
-			console.log(res[0]);
-            return(res[0]);
-
-    }
-	function DiskValue(){
-			var res = [];
-
-			$.ajax({
-        		url:"http://localhost:8000/dyno/systemstats",
-        		dataType : 'json',
-        		async : false,
-        		success : function(result) {
-				res[0]=result.disk
-            }
-			});
-
-			return res[0];
-	 }
-	function NetworkValue(){
-			var res = [];
-			setTimeout(NetworkValue, 5000);
-			$.ajax({
-        		url:"http://localhost:8000/dyno/systemstats",
-        		dataType : 'json',
-        		async : false,
-        		success : function(result) {
-				res[0]=result.network
-            }
-			});
-			return res[0];
-	}
 </script>
 </body>
 </html>
