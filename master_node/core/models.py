@@ -83,4 +83,4 @@ class ProjectBuild(models.Model):
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.project + ":" + self.time
+        return str(self.project) + ":" + str(self.time)
