@@ -1,63 +1,419 @@
 <!DOCTYPE html>
-{% block head %}Create/Update Project{% endblock %}
 {% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link href="{% static 'css/bootstrap-fluid-adj.css' %}" rel="stylesheet">
+    <style>
+        .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+    </style>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
-    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-responsive.min.css' %}" rel="stylesheet">
+    <link id="base-style" href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link id="base-style-responsive" href="{% static 'css/style-responsive.css' %}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext'
+          rel='stylesheet' type='text/css'>
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 </head>
-<body>
+<body onload="Call();">
 {% block content %}
-<div class="hero-unit">
-    <a href="/logout/">Logout</a>
-    <a href="/insert/">Create Project</a>
-
-
-    <div class="container">
-        {% if people %}
-        <table class="table table-striped table-bordered bootstrap-datatable datatable">
-            <thead>
-            <tr>
-                <th>Project Name</th>
-                <th>Project URL</th>
-                <th>Project Owner</th>
-                <th>Project Last Build Time</th>
-                <th>Status</th>
-                <th>Project Creation Time</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for project in people %}
-            <tr>
-                <td>{{project.project_name}}</td>
-                <td>{{project.url}}</td>
-                <td>{{project.owner}}</td>
-                <td>{{project.last_build_time}}</td>
-                <td id="image"></td>
-                <td>{{project.created_time}}</td>
-                <td>
-                    <button type="button" onclick="location.href='/edit/{{project.id}}';">Edit</button>
-                    <button type="button" onclick="location.href='/delete/{{project.id}}';">Delete</button>
-                    <button type="button" id="{{project.id}}" class="build_button" rel="/home/sayalee/raspberrypi_cluster/master_node/core/static/img/load.gif">Build</button>
-                    <button type="button" onclick="location.href='/deploy/{{project.id}}';">Deply</button>
-                </td>
-            </tr>
-            </tbody>
-            {% endfor %}
-        </table>
-        {% else %}
-        <p>No project in the database</p>
-        {% endif %}
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <span class="brand">ADMIN DASHBOARD</span>
+        </div>
     </div>
 </div>
+<br>
+
+<div class="row-fluid sortable">
+
+    <div class="box span12">
+        <div class="box-header" data-original-title>
+            <h2><i class="halflings-icon edit"></i><span class="break"></span>Current Projects</h2>
+
+            <div class="box-icon">
+                <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+                <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+                <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+            </div>
+        </div>
+        <div class="box-content">
+            <div class="row-fluid hideInIE8 circleStats">
+                {% if p %}
+                <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                    <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Project URL</th>
+                        <th>Project Owner</th>
+                        <th>Project Last Build Time</th>
+                        <th>Status</th>
+                        <th>Project Creation Time</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for project in p %}
+                    <tr>
+                        <td>{{project.project_name}}</td>
+                        <td>{{project.url}}</td>
+                        <td>{{project.owner}}</td>
+                        <td>{{project.last_build_time}}</td>
+                        <td id="image{{project.id}}"></td>
+                        <td>{{project.created_time}}</td>
+                        <td class="center">
+                            <button type="button" class="btn btn-warning"
+                                    onclick="location.href='/edit/{{project.id}}';">Edit
+                            </button>
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-danger"
+                                    onclick="location.href='/delete/{{project.id}}';">Delete
+                            </button>
+                            <button type="button" id="{{project.id}}" class="build_button btn btn-info"
+                                    rel="/home/sayalee/raspberrypi_cluster/master_node/core/static/img/load.gif">Build
+                            </button>
+                            &nbsp;
+                            <button type="button" class="btn btn-success"
+                                    onclick="location.href='/deploy/{{project.id}}';">Deply
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {% else %}
+                <p>No project in the database</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Projects -->
+<div class="box span12">
+    <div class="box-header" data-original-title>
+        <h2><i class="halflings-icon edit"></i><span class="break"></span>Master Node</h2>
+
+        <div class="box-icon">
+            <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+            <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+            <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+        </div>
+    </div>
+    <div class="box-content">
+                <svg id="fillgauge1" width="19%" height="200"></svg>
+				<svg id="fillgauge2" width="19%" height="200"></svg>
+				<svg id="fillgauge3" width="19%" height="200"></svg>
+
+
+
+	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+            <h2><span class="fire"><i></i></span> Server Load</h2>
+            <hr>
+            <div class="content">
+                <div id="serverLoad2" style="height:105px;"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+<!-- End MAster Node -->
+<!--
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node (GitLab)</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<div class="row-fluid hideInIE8 circleStats">
+							<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox red">
+						<div class="header">Disk Space Usage</div>
+						<span class="percent">percent</span>
+						<div class="circleStat">
+                    		<input value="8" class="whiteCircle" />
+						</div>
+						<div class="footer">
+
+						</div>
+                	</div>
+				</div>
+
+
+				<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox greenDark">
+						<div class="header">Bandwidth</div>
+						<span class="percent">percent</span>
+						<div class="circleStat">
+                    		<input type="text" value="0" class="whiteCircle" />
+						</div>
+						<div class="footer">
+							<span class="count">
+								<span class="number">50</span>
+								<span class="unit">GB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">5000</span>
+								<span class="unit">GB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+				<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox pink">
+						<div class="header">Memory</div>
+						<span class="percent">percent</span>
+                    	<div class="circleStat">
+                    		<input type="text" value="100" class="whiteCircle" />
+						</div>
+						<div class="footer">
+							<span class="count">
+								<span class="number">64</span>
+								<span class="unit">GB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">64</span>
+								<span class="unit">GB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+
+				<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+					<h2><span class="glyphicons fire"><i></i></span> Server Load</h2>
+					<hr>
+					<div class="content">
+						 <div id="serverLoad2" style="height:105px;"></div>
+					</div>
+				</div>
+						</div>
+					</div>
+</div>
+</div>
+-->
+<!-- End 2nd Node -->
+<!--
+<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<div class="row-fluid hideInIE8 circleStats">
+							<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox red">
+						<div class="header">Disk Space Usage</div>
+						<span class="percent">percent</span>
+						<div class="circleStat">
+                    		<input type="text" value="58" class="whiteCircle" />
+						</div>		
+						<div class="footer">
+							<span class="count">
+								<span class="number">20000</span>
+								<span class="unit">MB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">50000</span>
+								<span class="unit">MB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+
+
+				<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox greenDark">
+						<div class="header">Bandwidth</div>
+						<span class="percent">percent</span>
+						<div class="circleStat">
+                    		<input type="text" value="78" class="whiteCircle" />
+						</div>
+						<div class="footer">
+							<span class="count">
+								<span class="number">5000</span>
+								<span class="unit">GB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">5000</span>
+								<span class="unit">GB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+				<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox pink">
+						<div class="header">Memory</div>
+						<span class="percent">percent</span>
+                    	<div class="circleStat">
+                    		<input type="text" value="100" class="whiteCircle" />
+						</div>
+						<div class="footer">
+							<span class="count">
+								<span class="number">64</span>
+								<span class="unit">GB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">64</span>
+								<span class="unit">GB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+
+				<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+					<h2><span class="glyphicons fire"><i></i></span> Server Load</h2>
+					<hr>
+					<div class="content">
+						 <div id="serverLoad3" style="height:105px;"></div>
+					</div>
+				</div>
+						</div>
+					</div>
+</div>
+</div>
+-->
+<!-- End 3nd Node -->
+<!--
+<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<div class="row-fluid hideInIE8 circleStats">
+							<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox red">
+						<div class="header">Disk Space Usage</div>
+						<span class="percent">percent</span>
+						<div class="circleStat">
+                    		<input type="text" value="58" class="whiteCircle" />
+						</div>		
+						<div class="footer">
+							<span class="count">
+								<span class="number">20000</span>
+								<span class="unit">MB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">50000</span>
+								<span class="unit">MB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+
+
+				<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox greenDark">
+						<div class="header">Bandwidth</div>
+						<span class="percent">percent</span>
+						<div class="circleStat">
+                    		<input type="text" value="78" class="whiteCircle" />
+						</div>
+						<div class="footer">
+							<span class="count">
+								<span class="number">5000</span>
+								<span class="unit">GB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">5000</span>
+								<span class="unit">GB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+				<div class="span2" onTablet="span4" onDesktop="span2">
+                	<div class="circleStatsItemBox pink">
+						<div class="header">Memory</div>
+						<span class="percent">percent</span>
+                    	<div class="circleStat">
+                    		<input type="text" value="100" class="whiteCircle" />
+						</div>
+						<div class="footer">
+							<span class="count">
+								<span class="number">64</span>
+								<span class="unit">GB</span>
+							</span>
+							<span class="sep"> / </span>
+							<span class="value">
+								<span class="number">64</span>
+								<span class="unit">GB</span>
+							</span>	
+						</div>
+                	</div>
+				</div>
+
+
+				<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+					<h2><span class="glyphicons fire"><i></i></span> Server Load</h2>
+					<hr>
+					<div class="content">
+						 <div id="serverLoad4" style="height:105px;"></div>
+					</div>
+				</div>
+						</div>
+					</div>
+</div>
+</div>
+-->
+<!-- End 4nd Node -->
+
+
+</div>
 {% endblock %}
+<script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
+<script src="{% static 'js/liquidFillGauge.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery-migrate-1.0.0.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui-1.10.0.custom.min.js' %}"></script>
+<script src="{% static 'js/jquery.ui.touch-punch.js' %}"></script>
+<script src="{% static 'js/modernizr.js' %}"></script>
+<script src="{% static 'js/jquery.cookie.js' %}"></script>
+<script src="{% static 'js/fullcalendar.min.js' %}"></script>
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/excanvas.js' %}"></script>
+<script src="{% static 'js/jquery.flot.js' %}"></script>
+<script src="{% static 'js/jquery.flot.pie.js' %}"></script>
+<script src="{% static 'js/jquery.flot.stack.js' %}"></script>
+<script src="{% static 'js/jquery.flot.resize.min.js' %}"></script>
+<script src="{% static 'js/jquery.chosen.min.js' %}"></script>
+<script src="{% static 'js/jquery.uniform.min.js' %}"></script>
+<script src="{% static 'js/jquery.cleditor.min.js' %}"></script>
+<script src="{% static 'js/jquery.noty.js' %}"></script>
+<script src="{% static 'js/jquery.elfinder.min.js' %}"></script>
+<script src="{% static 'js/jquery.raty.min.js' %}"></script>
+<script src="{% static 'js/jquery.iphone.toggle.js' %}"></script>
+<script src="{% static 'js/jquery.uploadify-3.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.gritter.min.js' %}"></script>
+<script src="{% static 'js/jquery.imagesloaded.js' %}"></script>
+<script src="{% static 'js/jquery.masonry.min.js' %}"></script>
+<script src="{% static 'js/jquery.knob.modified.js' %}"></script>
+<script src="{% static 'js/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'js/counter.js' %}"></script>
+<script src="{% static 'js/retina.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
 <script type="text/javascript">
 	 	/*function updateStatus(){
 	 	    var xmlHttp = new XMLHttpRequest();
@@ -65,12 +421,12 @@
             xmlHttp.send( null );
             return xmlHttp.responseText;
     	}*/
-
+        var projectId
         $(document).ready(function(){
             $(".build_button").click(function(){
                 var imgUrl = $(this).attr('rel');
-                var projectId = $(this).attr('id');
-                $("#image").html("<img src='" + imgUrl + "' alt='description' />");
+                projectId = $(this).attr('id');
+                $("#image"+projectId).html("<img src='" + imgUrl + "' alt='description' />");
                 $.ajax({url: "/build/" + projectId , success: function(result){
                         checkStatus(result);
                      }});
@@ -78,24 +434,24 @@
         });
 
         function checkStatus(result){
-        console.log(result);
-            $.post("http://127.0.0.1:4242/queue/checkStatus",result,function(data){
+            $.post("/checkStatus/",result,function(data){
+                console.log(result);
                 var st = JSON.parse(data)
                 if(st.status=="FAILURE"){
                     var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
-                    $('#image').html("<img src='" + locationString + "' alt='description' width='32' height='32'/>");
+                    $('#image'+projectId).html("<img src='" + locationString + "' alt='description' width='32' height='32'/>");
                     clearTimeout(repeat);
                     return;
                 }
                 else if(st.status=="NOT FOUND"){
                     var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/failed.png";
-                    $('#image').html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
+                    $('#image'+projectId).html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
                     clearTimeout(repeat);
                     return;
                 }
                 else if(st.status=="SUCCESS"){
                     var locationString = "/home/sayalee/raspberrypi_cluster/master_node/core/static/img/success.png";
-                    $('#image').html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
+                    $('#image'+projectId).html("<img src='" + locationString + "' alt='description' width='32' height='32' />");
                     clearTimeout(repeat);
                     return;
                 }
@@ -105,6 +461,89 @@
             });
 
         }
+
+</script>
+<script language="JavaScript">
+    var config1 = liquidFillGaugeDefaultSettings();
+    config1.circleColor = "#7e3878";
+    config1.textColor = "#232323";
+    config1.waveTextColor = "#232323";
+    config1.waveColor = "#7e3878";
+    config1.circleThickness = 0.1;
+    config1.textVertPosition = 0.52;
+    config1.waveAnimateTime = 1000;
+
+    var config2 = liquidFillGaugeDefaultSettings();
+    config2.circleColor = "#ffc40d";
+    config2.textColor = "#232323";
+    config2.waveTextColor = "#232323";
+    config2.waveColor = "#ffc40d";
+    config2.circleThickness = 0.1;
+    config2.textVertPosition = 0.52;
+    config2.waveAnimateTime = 1000;
+
+    var config3 = liquidFillGaugeDefaultSettings();
+    config3.circleColor = "#00868B";
+    config3.textColor = "#232323";
+    config3.waveTextColor = "#232323";
+    config3.waveColor = "#00868B";
+    config3.circleThickness = 0.1;
+    config3.textVertPosition = 0.52;
+    config3.waveAnimateTime = 1000;
+
+	var gauge1 = loadLiquidFillGauge("fillgauge1", 0.2, config2);
+	var gauge2 = loadLiquidFillGauge("fillgauge2", 0.2, config1);
+	var gauge3 = loadLiquidFillGauge("fillgauge3", 0.2, config3);
+
+	function Call(){
+	console.log("Entering call function");
+	gauge1.update(MemValue(), 5000);
+	gauge2.update(DiskValue(), 5000);
+	gauge3.update(NetworkValue(), 5000);
+	setTimeout(Call, 5000);
+	}
+    function MemValue(){
+    		var res = [];
+			$.ajax({
+        		url:"http://localhost:8000/dyno/systemstats",
+        		dataType : 'json',
+        		async : false,
+        		success : function(result) {
+        		console.log(result.memory);
+				res[0]=result.memory
+            }
+			});
+			console.log(res[0]);
+            return(res[0]);
+
+    }
+	function DiskValue(){
+			var res = [];
+
+			$.ajax({
+        		url:"http://localhost:8000/dyno/systemstats",
+        		dataType : 'json',
+        		async : false,
+        		success : function(result) {
+				res[0]=result.disk
+            }
+			});
+
+			return res[0];
+	 }
+	function NetworkValue(){
+			var res = [];
+			setTimeout(NetworkValue, 5000);
+			$.ajax({
+        		url:"http://localhost:8000/dyno/systemstats",
+        		dataType : 'json',
+        		async : false,
+        		success : function(result) {
+				res[0]=result.network
+            }
+			});
+			return res[0];
+	}
 </script>
 </body>
 </html>
