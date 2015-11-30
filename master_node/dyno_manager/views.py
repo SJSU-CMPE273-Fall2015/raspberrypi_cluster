@@ -27,7 +27,7 @@ def registerCluster(request):
     cluster.ip = clusterData['ip']
     cluster.location = clusterData['location']
     cluster.type = clusterData['type']
-    cluster.status='active'
+    cluster.status = 'active'
     cluster.save()
 
     reply = {}
@@ -38,3 +38,20 @@ def registerCluster(request):
     reply['boot_time'] = str(cluster.last_boot_time)
     return HttpResponse(json.dumps(reply))
 
+
+def getStats(request):
+    reply = {}
+    clusters = Cluster.objects.filter(status='active')
+    for cluster in clusters:
+        body_unicode = request.body.decode('utf-8')
+        stats = SystemAudit.objects.filter(cluster_id=cluster.id).order_by('time').reverse()[:30]
+        i = 0
+        cpu_data = []
+        for stat in reversed(stats):
+            i = i + 1
+            cpu_data.append([i, stat.cpu_usage])
+        reply['memory'] = stats[0].memory_usage
+        reply['disk'] = stats[0].disk_usage
+        reply['network'] = stats[0].network_usage
+        reply['cpu'] = cpu_data
+    return HttpResponse(json.dumps(reply))

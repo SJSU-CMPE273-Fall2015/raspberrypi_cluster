@@ -31,4 +31,4 @@ while True:
     data = response.read()
     print(data)
     conn.close()
-    time.sleep(5)
+    time.sleep(15)
