@@ -1,6 +1,6 @@
 [CONFIGURATION]
 master_ip = 127.0.0.1:8000
-cluster_id = 51
+cluster_id = 57
 rq_id = 127.0.0.1:4242
 number_of_clusters = 2
 
