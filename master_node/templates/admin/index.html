@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 </head>
-<body onload="Call();">
+<body>
 {% block content %}
 <div class="navbar">
     <div class="navbar-inner">
@@ -41,7 +41,6 @@
         </div>
         <div class="box-content">
             <div class="row-fluid hideInIE8 circleStats">
-                {% if p %}
                 <table class="table table-striped table-bordered bootstrap-datatable datatable">
                     <thead>
                     <tr>
@@ -49,43 +48,19 @@
                         <th>Project URL</th>
                         <th>Project Owner</th>
                         <th>Project Last Build Time</th>
-                        <th>Status</th>
                         <th>Project Creation Time</th>
-                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for project in p %}
                     <tr>
-                        <td>{{project.project_name}}</td>
-                        <td>{{project.url}}</td>
-                        <td>{{project.owner}}</td>
-                        <td>{{project.last_build_time}}</td>
-                        <td id="image{{project.id}}"></td>
-                        <td>{{project.created_time}}</td>
-                        <td class="center">
-                            <button type="button" class="btn btn-warning"
-                                    onclick="location.href='/edit/{{project.id}}';">Edit
-                            </button>
-                            &nbsp;&nbsp;
-                            <button type="button" class="btn btn-danger"
-                                    onclick="location.href='/delete/{{project.id}}';">Delete
-                            </button>
-                            <button type="button" id="{{project.id}}" class="build_button btn btn-info"
-                                    rel="/home/sayalee/raspberrypi_cluster/master_node/core/static/img/load.gif">Build
-                            </button>
-                            &nbsp;
-                            <button type="button" class="btn btn-success"
-                                    onclick="location.href='/deploy/{{project.id}}';">Deply
-                            </button>
-                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
-                    {% endfor %}
                 </table>
-                {% else %}
-                <p>No project in the database</p>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -112,7 +87,7 @@
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad2" style="height:105px;"></div>
+                <div id="serverLoad1" style="height:105px;"></div>
             </div>
         </div>
 
@@ -121,262 +96,95 @@
 </div>
 </div>
 <!-- End MAster Node -->
-<!--
-				<div class="box span12">
-					<div class="box-header" data-original-title>
-						<h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node (GitLab)</h2>
-						<div class="box-icon">
-							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
-							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
-							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
-						</div>
-					</div>
-					<div class="box-content">
-						<div class="row-fluid hideInIE8 circleStats">
-							<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox red">
-						<div class="header">Disk Space Usage</div>
-						<span class="percent">percent</span>
-						<div class="circleStat">
-                    		<input value="8" class="whiteCircle" />
-						</div>
-						<div class="footer">
+<div class="box span12">
+    <div class="box-header" data-original-title>
+        <h2><i class="halflings-icon edit"></i><span class="break"></span>Slave(GitLab) Node</h2>
 
-						</div>
-                	</div>
-				</div>
+        <div class="box-icon">
+            <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+            <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+            <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+        </div>
+    </div>
+    <div class="box-content">
+                <svg id="fillgauge4" width="19%" height="200"></svg>
+				<svg id="fillgauge5" width="19%" height="200"></svg>
+				<svg id="fillgauge6" width="19%" height="200"></svg>
 
 
-				<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox greenDark">
-						<div class="header">Bandwidth</div>
-						<span class="percent">percent</span>
-						<div class="circleStat">
-                    		<input type="text" value="0" class="whiteCircle" />
-						</div>
-						<div class="footer">
-							<span class="count">
-								<span class="number">50</span>
-								<span class="unit">GB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">5000</span>
-								<span class="unit">GB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
-				<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox pink">
-						<div class="header">Memory</div>
-						<span class="percent">percent</span>
-                    	<div class="circleStat">
-                    		<input type="text" value="100" class="whiteCircle" />
-						</div>
-						<div class="footer">
-							<span class="count">
-								<span class="number">64</span>
-								<span class="unit">GB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">64</span>
-								<span class="unit">GB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
 
-				<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
-					<h2><span class="glyphicons fire"><i></i></span> Server Load</h2>
-					<hr>
-					<div class="content">
-						 <div id="serverLoad2" style="height:105px;"></div>
-					</div>
-				</div>
-						</div>
-					</div>
+	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+            <h2><span class="fire"><i></i></span> Server Load</h2>
+            <hr>
+            <div class="content">
+                <div id="serverLoad2" style="height:105px;"></div>
+            </div>
+        </div>
+
+    </div>
 </div>
 </div>
--->
+</div>
 <!-- End 2nd Node -->
-<!--
 <div class="box span12">
-					<div class="box-header" data-original-title>
-						<h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
-						<div class="box-icon">
-							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
-							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
-							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
-						</div>
-					</div>
-					<div class="box-content">
-						<div class="row-fluid hideInIE8 circleStats">
-							<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox red">
-						<div class="header">Disk Space Usage</div>
-						<span class="percent">percent</span>
-						<div class="circleStat">
-                    		<input type="text" value="58" class="whiteCircle" />
-						</div>		
-						<div class="footer">
-							<span class="count">
-								<span class="number">20000</span>
-								<span class="unit">MB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">50000</span>
-								<span class="unit">MB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
+    <div class="box-header" data-original-title>
+        <h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
+
+        <div class="box-icon">
+            <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+            <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+            <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+        </div>
+    </div>
+    <div class="box-content">
+                <svg id="fillgauge7" width="19%" height="200"></svg>
+				<svg id="fillgauge8" width="19%" height="200"></svg>
+				<svg id="fillgauge9" width="19%" height="200"></svg>
 
 
-				<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox greenDark">
-						<div class="header">Bandwidth</div>
-						<span class="percent">percent</span>
-						<div class="circleStat">
-                    		<input type="text" value="78" class="whiteCircle" />
-						</div>
-						<div class="footer">
-							<span class="count">
-								<span class="number">5000</span>
-								<span class="unit">GB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">5000</span>
-								<span class="unit">GB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
-				<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox pink">
-						<div class="header">Memory</div>
-						<span class="percent">percent</span>
-                    	<div class="circleStat">
-                    		<input type="text" value="100" class="whiteCircle" />
-						</div>
-						<div class="footer">
-							<span class="count">
-								<span class="number">64</span>
-								<span class="unit">GB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">64</span>
-								<span class="unit">GB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
 
-				<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
-					<h2><span class="glyphicons fire"><i></i></span> Server Load</h2>
-					<hr>
-					<div class="content">
-						 <div id="serverLoad3" style="height:105px;"></div>
-					</div>
-				</div>
-						</div>
-					</div>
+	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+            <h2><span class="fire"><i></i></span> Server Load</h2>
+            <hr>
+            <div class="content">
+                <div id="serverLoad3" style="height:105px;"></div>
+            </div>
+        </div>
+
+    </div>
 </div>
 </div>
--->
+</div>
 <!-- End 3nd Node -->
-<!--
 <div class="box span12">
-					<div class="box-header" data-original-title>
-						<h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
-						<div class="box-icon">
-							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
-							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
-							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
-						</div>
-					</div>
-					<div class="box-content">
-						<div class="row-fluid hideInIE8 circleStats">
-							<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox red">
-						<div class="header">Disk Space Usage</div>
-						<span class="percent">percent</span>
-						<div class="circleStat">
-                    		<input type="text" value="58" class="whiteCircle" />
-						</div>		
-						<div class="footer">
-							<span class="count">
-								<span class="number">20000</span>
-								<span class="unit">MB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">50000</span>
-								<span class="unit">MB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
+    <div class="box-header" data-original-title>
+        <h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
+
+        <div class="box-icon">
+            <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+            <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+            <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+        </div>
+    </div>
+    <div class="box-content">
+                <svg id="fillgauge10" width="19%" height="200"></svg>
+				<svg id="fillgauge11" width="19%" height="200"></svg>
+				<svg id="fillgauge12" width="19%" height="200"></svg>
 
 
-				<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox greenDark">
-						<div class="header">Bandwidth</div>
-						<span class="percent">percent</span>
-						<div class="circleStat">
-                    		<input type="text" value="78" class="whiteCircle" />
-						</div>
-						<div class="footer">
-							<span class="count">
-								<span class="number">5000</span>
-								<span class="unit">GB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">5000</span>
-								<span class="unit">GB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
-				<div class="span2" onTablet="span4" onDesktop="span2">
-                	<div class="circleStatsItemBox pink">
-						<div class="header">Memory</div>
-						<span class="percent">percent</span>
-                    	<div class="circleStat">
-                    		<input type="text" value="100" class="whiteCircle" />
-						</div>
-						<div class="footer">
-							<span class="count">
-								<span class="number">64</span>
-								<span class="unit">GB</span>
-							</span>
-							<span class="sep"> / </span>
-							<span class="value">
-								<span class="number">64</span>
-								<span class="unit">GB</span>
-							</span>	
-						</div>
-                	</div>
-				</div>
 
+	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+            <h2><span class="fire"><i></i></span> Server Load</h2>
+            <hr>
+            <div class="content">
+                <div id="serverLoad4" style="height:105px;"></div>
+            </div>
+        </div>
 
-				<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
-					<h2><span class="glyphicons fire"><i></i></span> Server Load</h2>
-					<hr>
-					<div class="content">
-						 <div id="serverLoad4" style="height:105px;"></div>
-					</div>
-				</div>
-						</div>
-					</div>
+    </div>
 </div>
 </div>
--->
+</div>
 <!-- End 4nd Node -->
 
 
@@ -462,88 +270,6 @@
 
         }
 
-</script>
-<script language="JavaScript">
-    var config1 = liquidFillGaugeDefaultSettings();
-    config1.circleColor = "#7e3878";
-    config1.textColor = "#232323";
-    config1.waveTextColor = "#232323";
-    config1.waveColor = "#7e3878";
-    config1.circleThickness = 0.1;
-    config1.textVertPosition = 0.52;
-    config1.waveAnimateTime = 1000;
-
-    var config2 = liquidFillGaugeDefaultSettings();
-    config2.circleColor = "#ffc40d";
-    config2.textColor = "#232323";
-    config2.waveTextColor = "#232323";
-    config2.waveColor = "#ffc40d";
-    config2.circleThickness = 0.1;
-    config2.textVertPosition = 0.52;
-    config2.waveAnimateTime = 1000;
-
-    var config3 = liquidFillGaugeDefaultSettings();
-    config3.circleColor = "#00868B";
-    config3.textColor = "#232323";
-    config3.waveTextColor = "#232323";
-    config3.waveColor = "#00868B";
-    config3.circleThickness = 0.1;
-    config3.textVertPosition = 0.52;
-    config3.waveAnimateTime = 1000;
-
-	var gauge1 = loadLiquidFillGauge("fillgauge1", 0.2, config2);
-	var gauge2 = loadLiquidFillGauge("fillgauge2", 0.2, config1);
-	var gauge3 = loadLiquidFillGauge("fillgauge3", 0.2, config3);
-
-	function Call(){
-	console.log("Entering call function");
-	gauge1.update(MemValue(), 5000);
-	gauge2.update(DiskValue(), 5000);
-	gauge3.update(NetworkValue(), 5000);
-	setTimeout(Call, 5000);
-	}
-    function MemValue(){
-    		var res = [];
-			$.ajax({
-        		url:"http://localhost:8000/dyno/systemstats",
-        		dataType : 'json',
-        		async : false,
-        		success : function(result) {
-        		console.log(result.memory);
-				res[0]=result.memory
-            }
-			});
-			console.log(res[0]);
-            return(res[0]);
-
-    }
-	function DiskValue(){
-			var res = [];
-
-			$.ajax({
-        		url:"http://localhost:8000/dyno/systemstats",
-        		dataType : 'json',
-        		async : false,
-        		success : function(result) {
-				res[0]=result.disk
-            }
-			});
-
-			return res[0];
-	 }
-	function NetworkValue(){
-			var res = [];
-			setTimeout(NetworkValue, 5000);
-			$.ajax({
-        		url:"http://localhost:8000/dyno/systemstats",
-        		dataType : 'json',
-        		async : false,
-        		success : function(result) {
-				res[0]=result.network
-            }
-			});
-			return res[0];
-	}
 </script>
 </body>
 </html>
