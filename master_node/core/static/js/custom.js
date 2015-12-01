@@ -743,18 +743,17 @@ function circle_progess() {
 		
 		var value = $(this).find(".value > .number").html();
 		var unit = $(this).find(".value > .unit").html();
-		var percent = $(this).find("input").val()/100;
+
+		//countSpeed = 2300*percent;
 		
-		countSpeed = 2300*percent;
-		
-		endValue = value*percent;
+		//endValue = value*percent;
 		
 		$(this).find(".count > .unit").html(unit);
 		$(this).find(".count > .number").countTo({
 			
 			from: 0,
-		    to: endValue,
-		    speed: countSpeed,
+		    //to: endValue,
+		   // speed: countSpeed,
 		    refreshInterval: 50
 		
 		});
@@ -1681,36 +1680,76 @@ function charts() {
 		});
 	}
 
-
-
-
 	 // we use an inline data source in the example, usually data would
 	// be fetched from a server
-	var data = [], totalPoints = 300;
+	//Guage Config Start
+	var config1 = liquidFillGaugeDefaultSettings();
+    config1.circleColor = "#7e3878";
+    config1.textColor = "#232323";
+    config1.waveTextColor = "#232323";
+    config1.waveColor = "#7e3878";
+    config1.circleThickness = 0.1;
+    config1.textVertPosition = 0.52;
+    config1.waveAnimateTime = 1000;
+
+    var config2 = liquidFillGaugeDefaultSettings();
+    config2.circleColor = "#ffc40d";
+    config2.textColor = "#232323";
+    config2.waveTextColor = "#232323";
+    config2.waveColor = "#ffc40d";
+    config2.circleThickness = 0.1;
+    config2.textVertPosition = 0.52;
+    config2.waveAnimateTime = 1000;
+
+    var config3 = liquidFillGaugeDefaultSettings();
+    config3.circleColor = "#00868B";
+    config3.textColor = "#232323";
+    config3.waveTextColor = "#232323";
+    config3.waveColor = "#00868B";
+    config3.circleThickness = 0.1;
+    config3.textVertPosition = 0.52;
+    config3.waveAnimateTime = 1000;
+
+	var gauge1 = loadLiquidFillGauge("fillgauge1", 0.2, config2);
+	var gauge2 = loadLiquidFillGauge("fillgauge2", 0.2, config1);
+	var gauge3 = loadLiquidFillGauge("fillgauge3", 0.2, config3);
+	var gauge4 = loadLiquidFillGauge("fillgauge4", 0.2, config2);
+	var gauge5 = loadLiquidFillGauge("fillgauge5", 0.2, config1);
+	var gauge6 = loadLiquidFillGauge("fillgauge6", 0.2, config3);
+	var gauge7 = loadLiquidFillGauge("fillgauge7", 0.2, config2);
+	var gauge8 = loadLiquidFillGauge("fillgauge8", 0.2, config1);
+	var gauge9 = loadLiquidFillGauge("fillgauge9", 0.2, config3);
+	var gauge10 = loadLiquidFillGauge("fillgauge10", 0.2, config2);
+	var gauge11 = loadLiquidFillGauge("fillgauge11", 0.2, config1);
+	var gauge12 = loadLiquidFillGauge("fillgauge12", 0.2, config3);
+	//Guage Confg End
+	var data = [], totalPoints = 30;
+	var res1 = [];
 	function getRandomData() {
-		if (data.length > 0)
-			data = data.slice(1);
-
-		// do a random walk
-		while (data.length < totalPoints) {
-			var prev = data.length > 0 ? data[data.length - 1] : 50;
-			var y = prev + Math.random() * 10 - 5;
-			if (y < 0)
-				y = 0;
-			if (y > 100)
-				y = 100;
-			data.push(y);
-		}
-
-		// zip the generated y values with the x values
 		var res = [];
+
+        if (data.length > 0)
+			data = data.slice(1);
+		$.ajax({
+        		url:"http://localhost:8000/dyno/systemstats",
+        		dataType : 'json',
+        		async : false,
+        		success : function(result) {
+            	$.each(result.cpu, function(key, val) { data.push(val[1]); });
+            	res1[0]=result.memory;
+				res1[1]=result.disk;
+				res1[2]=result.network;
+            }
+			});
+
 		for (var i = 0; i < data.length; ++i)
 			res.push([i, data[i]])
+
 		return res;
 	}
 
 	// setup control widget
-	var updateInterval = 30;
+	var updateInterval = 5000;
 	$("#updateInterval").val(updateInterval).change(function () {
 		var v = $(this).val();
 		if (v && !isNaN(+v)) {
@@ -1724,30 +1763,34 @@ function charts() {
 	});
 
 	/* ---------- Realtime chart ---------- */
-	if($("#serverLoad").length)
-	{	
+	//Chart1
+		if($("#serverLoad1").length)
+	{
 		var options = {
 			series: { shadowSize: 1 },
-			lines: { show: true, lineWidth: 3, fill: true, fillColor: { colors: [ { opacity: 0.9 }, { opacity: 0.9 } ] }},
-			yaxis: { min: 0, max: 100, tickFormatter: function (v) { return v + "%"; }},
-			xaxis: { show: false },
-			colors: ["#FA5833"],
-			grid: {	tickColor: "#f9f9f9",
-					borderWidth: 0, 
+			lines: { show: true, lineWidth: 2, fill: true, fillColor: { colors: [ { opacity: 0.9 }, { opacity: 0.9 } ] }},
+			yaxis: { min: 0, max: 100, tickFormatter: function (v) { return v + "%"; }, color: "rgba(255,255,255,0.8)"},
+			xaxis: { show: false, color: "rgba(255,255,255,0.8)" },
+			colors: ["rgba(255,255,255,0.95)"],
+			grid: {	tickColor: "rgba(255,255,255,0.15)",
+					borderWidth: 0,
 			},
 		};
-		var plot = $.plot($("#serverLoad"), [ getRandomData() ], options);
+		var plot = $.plot($("#serverLoad1"), [ getRandomData() ], options);
 		function update() {
 			plot.setData([ getRandomData() ]);
 			// since the axes don't change, we don't need to call plot.setupGrid()
 			plot.draw();
-			
+
+			gauge1.update(res1[0]);
+			gauge2.update(res1[1]);
+			gauge3.update(res1[2]);
 			setTimeout(update, updateInterval);
 		}
 
 		update();
 	}
-	
+	//Chart2
 	if($("#serverLoad2").length)
 	{	
 		var options = {
@@ -1765,13 +1808,70 @@ function charts() {
 			plot.setData([ getRandomData() ]);
 			// since the axes don't change, we don't need to call plot.setupGrid()
 			plot.draw();
-			
+
+			gauge4.update(res1[0]);
+			gauge5.update(res1[1]);
+			gauge6.update(res1[2]);
 			setTimeout(update, updateInterval);
 		}
 
 		update();
 	}
-	
+	//Chart3
+	if($("#serverLoad3").length)
+	{
+		var options = {
+			series: { shadowSize: 1 },
+			lines: { show: true, lineWidth: 2, fill: true, fillColor: { colors: [ { opacity: 0.9 }, { opacity: 0.9 } ] }},
+			yaxis: { min: 0, max: 100, tickFormatter: function (v) { return v + "%"; }, color: "rgba(255,255,255,0.8)"},
+			xaxis: { show: false, color: "rgba(255,255,255,0.8)" },
+			colors: ["rgba(255,255,255,0.95)"],
+			grid: {	tickColor: "rgba(255,255,255,0.15)",
+					borderWidth: 0,
+			},
+		};
+		var plot = $.plot($("#serverLoad3"), [ getRandomData() ], options);
+		function update() {
+			plot.setData([ getRandomData() ]);
+			// since the axes don't change, we don't need to call plot.setupGrid()
+			plot.draw();
+
+			gauge7.update(res1[0]);
+			gauge8.update(res1[1]);
+			gauge9.update(res1[2]);
+			setTimeout(update, updateInterval);
+		}
+
+		update();
+	}
+	//Chart4
+	if($("#serverLoad4").length)
+	{
+		var options = {
+			series: { shadowSize: 1 },
+			lines: { show: true, lineWidth: 2, fill: true, fillColor: { colors: [ { opacity: 0.9 }, { opacity: 0.9 } ] }},
+			yaxis: { min: 0, max: 100, tickFormatter: function (v) { return v + "%"; }, color: "rgba(255,255,255,0.8)"},
+			xaxis: { show: false, color: "rgba(255,255,255,0.8)" },
+			colors: ["rgba(255,255,255,0.95)"],
+			grid: {	tickColor: "rgba(255,255,255,0.15)",
+					borderWidth: 0,
+			},
+		};
+		var plot = $.plot($("#serverLoad4"), [ getRandomData() ], options);
+		function update() {
+			plot.setData([ getRandomData() ]);
+			// since the axes don't change, we don't need to call plot.setupGrid()
+			plot.draw();
+
+			gauge10.update(res1[0]);
+			gauge11.update(res1[1]);
+			gauge12.update(res1[2]);
+			setTimeout(update, updateInterval);
+		}
+
+		update();
+	}
+	//ENd Chart
 	if($("#realtimechart").length)
 	{
 		var options = {

@@ -1,4 +1,5 @@
 import json
+import http.client
 
 from core.models import SystemAudit, Cluster
 from django.http import HttpResponse
@@ -16,6 +17,15 @@ def systemstatus(request):
                              )
     auditEntry.cluster_id = stat['cluster']
     auditEntry.save()
+    data = json.dumps({'cluster_id': stat['cluster']})
+    params = json.dumps({"topic": "Dyno_Manager", "data": data, "priority": 3})
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+    conn = http.client.HTTPConnection("localhost:4242")
+    conn.request("POST", "/queue/enqueue", params, headers)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+
     return HttpResponse(stat.__str__())
 
 
@@ -27,7 +37,7 @@ def registerCluster(request):
     cluster.ip = clusterData['ip']
     cluster.location = clusterData['location']
     cluster.type = clusterData['type']
-    cluster.status='active'
+    cluster.status = 'active'
     cluster.save()
 
     reply = {}
@@ -38,18 +48,22 @@ def registerCluster(request):
     reply['boot_time'] = str(cluster.last_boot_time)
     return HttpResponse(json.dumps(reply))
 
+
 def getStats(request):
+    reply = {}
+    data ={}
     clusters = Cluster.objects.filter(status='active')
     for cluster in clusters:
         body_unicode = request.body.decode('utf-8')
-        stats = SystemAudit.objects.filter(cluster_id=cluster.id).order_by('time').reverse()[:10]
-        print("=========================================")
-        
-
-
-    return HttpResponse(json.dumps(stats),mimetype="application/json")
-
-
-
-
-
+        stats = SystemAudit.objects.filter(cluster_id=cluster.id).order_by('time').reverse()[:30]
+        i = 0
+        cpu_data = []
+        for stat in reversed(stats):
+            i = i + 1
+            cpu_data.append([i, stat.cpu_usage])
+        data['memory'] = stats[0].memory_usage
+        data['disk'] = stats[0].disk_usage
+        data['network'] = stats[0].network_usage
+        data['cpu'] = cpu_data
+        reply[cluster.ip] = data
+    return HttpResponse(json.dumps(reply))

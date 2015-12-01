@@ -64,3 +64,5 @@ cluster_node/.idea/
 */.idea/*
 # No temp files
 *~
+
+cluster_node/cluster/config.txt
