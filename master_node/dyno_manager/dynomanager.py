@@ -29,15 +29,19 @@ class DynoManager():
 
         while True:
             conn = http.client.HTTPConnection("localhost:4242")
-            conn.request("GET", "/queue/dequeue/Dyno_Manager")
+            conn.request("POST", "/queue/fetch/Dyno_Manager")
             r1 = conn.getresponse()
             data = r1.read().decode("utf-8")
             request = json.loads(data)
+
             if 'error' in request:
                 print("No data")
                 break
             payload = json.loads(request['data'])
             self.mark_cluster_present(int(payload['cluster_id']))
+
+            # Checking status to remove element fromo queue
+            request['topic'] = 'Dyno_Manager'
 
         print("Marked clusters:", self.clusters)
         for cluster in Cluster.objects.filter(status='active'):

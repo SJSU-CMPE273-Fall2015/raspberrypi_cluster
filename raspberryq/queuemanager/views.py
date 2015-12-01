@@ -78,6 +78,23 @@ def dequeue(request, topic):
         return HttpResponse(json.dumps(error))
     return HttpResponse(success)
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def fetch(request, topic):
+    """
+    Use get method;
+     http://127.0.0.1:8000/queue/fetch/<topic>
+
+     http://127.0.0.1:8000/queue/fetch/testQ
+    :param request:
+    :param topic:
+    :return:
+    """
+    success = manager.getQueue(topic).pop()
+    if not success:
+        error = {"error": "Either queue is not present or is Empty", "topic": topic}
+        return HttpResponse(json.dumps(error))
+    return HttpResponse(success)
 
 @csrf_exempt
 @require_http_methods(["POST"])
