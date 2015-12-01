@@ -51,6 +51,7 @@ def registerCluster(request):
 
 def getStats(request):
     reply = {}
+    data ={}
     clusters = Cluster.objects.filter(status='active')
     for cluster in clusters:
         body_unicode = request.body.decode('utf-8')
@@ -60,8 +61,9 @@ def getStats(request):
         for stat in reversed(stats):
             i = i + 1
             cpu_data.append([i, stat.cpu_usage])
-        reply['memory'] = stats[0].memory_usage
-        reply['disk'] = stats[0].disk_usage
-        reply['network'] = stats[0].network_usage
-        reply['cpu'] = cpu_data
+        data['memory'] = stats[0].memory_usage
+        data['disk'] = stats[0].disk_usage
+        data['network'] = stats[0].network_usage
+        data['cpu'] = cpu_data
+        reply[cluster.ip] = data
     return HttpResponse(json.dumps(reply))
