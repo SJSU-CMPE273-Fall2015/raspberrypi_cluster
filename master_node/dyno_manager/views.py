@@ -55,5 +55,5 @@ def getStats(request):
         data['disk'] = stats[0].disk_usage
         data['network'] = stats[0].network_usage
         data['cpu'] = cpu_data
-        reply[cluster.ip] = data
+        reply[cluster.id] = data
     return HttpResponse(json.dumps(reply))

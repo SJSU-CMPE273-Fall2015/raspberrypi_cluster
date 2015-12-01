@@ -29,6 +29,15 @@ class Project(models.Model):
     def __str__(self):
         return self.project_name
 
+    def to_dict(self):
+        data={}
+        data['project_name']=self.project_name
+        data['url']=self.url
+        data['owner']=self.owner.username
+        data['last_build_time']=str(self.last_build_time)
+        data['created_time']=str(self.created_time)
+        return data
+
 
 class Cluster(models.Model):
     ip = models.GenericIPAddressField(max_length=20, null=True)

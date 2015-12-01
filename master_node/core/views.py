@@ -52,6 +52,14 @@ def logout_page(request):
     return HttpResponseRedirect('/')
 
 
+def getProjects(request):
+    projects = Project.objects.all()
+    output = []
+    for project in projects:
+        output.append(project.to_dict())
+    return HttpResponse(json.dumps(output))
+
+
 def home(request):
     people = Project.objects.filter(owner=request.user)
     t = loader.get_template('home.html')

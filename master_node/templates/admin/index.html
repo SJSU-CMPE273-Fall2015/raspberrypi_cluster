@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Admin Dashboard</title>
     <style>
         .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
     </style>
@@ -41,24 +41,16 @@
         </div>
         <div class="box-content">
             <div class="row-fluid hideInIE8 circleStats">
-                <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                <table id="table" class="table table-striped table-bordered bootstrap-datatable datatable">
                     <thead>
                     <tr>
                         <th>Project Name</th>
                         <th>Project URL</th>
                         <th>Project Owner</th>
-                        <th>Project Last Build Time</th>
                         <th>Project Creation Time</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -87,7 +79,7 @@
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad1" style="height:105px;"></div>
+                <div id="sayalee1" style="height:105px;"></div>
             </div>
         </div>
 
@@ -117,7 +109,7 @@
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad2" style="height:105px;"></div>
+                <div id="sayalee2" style="height:105px;"></div>
             </div>
         </div>
 
@@ -147,7 +139,7 @@
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad3" style="height:105px;"></div>
+                <div id="sayalee3" style="height:105px;"></div>
             </div>
         </div>
 
@@ -177,7 +169,7 @@
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad4" style="height:105px;"></div>
+                <div id="sayalee4" style="height:105px;"></div>
             </div>
         </div>
 
@@ -222,6 +214,9 @@
 <script src="{% static 'js/counter.js' %}"></script>
 <script src="{% static 'js/retina.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
+<script type="text/javascript">
+
+</script>
 <script type="text/javascript">
 	 	/*function updateStatus(){
 	 	    var xmlHttp = new XMLHttpRequest();
