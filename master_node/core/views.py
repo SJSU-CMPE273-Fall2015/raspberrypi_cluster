@@ -1,5 +1,6 @@
 import json
 import http.client
+import MySQLdb as db
 
 from core.forms import *
 from django.contrib.auth import logout
@@ -27,6 +28,7 @@ def register(request):
                 password=form.cleaned_data['password1'],
                 email=form.cleaned_data['email']
             )
+        create_databaseschema(user)
         return HttpResponseRedirect('/register/success/')
 
     else:
@@ -40,6 +42,10 @@ def register(request):
             variables,
         )
 
+def create_databaseschema(user):
+    con = db.connect(host='127.0.0.1',user="pi",passwd='raspberry')
+    cur = con.cursor()
+    cur.execute('CREATE DATABASE ' +user.username)
 
 def register_success(request):
     return render_to_response(
