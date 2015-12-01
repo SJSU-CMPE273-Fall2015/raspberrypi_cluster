@@ -15,6 +15,11 @@ from .models import ProjectAudit
 from .models import ProjectBuild
 from .models import SystemAudit
 from .models import Cluster
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.txt')
+rq_id = config['CONFIGURATION']['RQ_ID']
 
 
 @csrf_protect
@@ -39,6 +44,10 @@ def register(request):
             'registration/register.html',
             variables,
         )
+
+
+
+
 
 
 def register_success(request):
@@ -111,12 +120,13 @@ def checkStatus(request):
     body_data = json.loads(body_unicode)
     params = json.dumps(body_data)
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-    conn = http.client.HTTPConnection("localhost:4242")
+    conn = http.client.HTTPConnection(rq_id)
     conn.request("POST", "/queue/checkStatus", params, headers)
     response = conn.getresponse()
     data = response.read()
     conn.close()
     return HttpResponse(data)
+
 
 
 

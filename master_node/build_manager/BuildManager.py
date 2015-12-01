@@ -9,6 +9,7 @@ import random
 from git import Repo
 from core.models import Project, ProjectBuild
 import tarfile
+import configparser
 
 
 
@@ -24,8 +25,16 @@ GOLANG = "go_"
 # Dict to maintain project pk to dirname
 project_dictionary = {}
 
-# Base url to store cloned project
-base_path = "/home/adityasharma/Desktop/"
+# base_path url to store cloned project
+
+config = configparser.ConfigParser()
+config.read('config.txt')
+base_path = config['CONFIGURATION']['BASE_PATH']
+
+
+
+#base_path = "/home/adityasharma/Desktop/"
+
 script_path = os.getcwd()
 
 def find_project(project_id):
