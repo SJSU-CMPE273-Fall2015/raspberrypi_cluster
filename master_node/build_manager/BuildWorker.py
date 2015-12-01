@@ -1,11 +1,11 @@
 __author__ = 'saurabh'
 import http.client
 import json
-from .BuildManager import find_project
 import time
 import traceback
 import configparser
 
+from .BuildManager import find_project
 
 config = configparser.ConfigParser()
 config.read('config.txt')
