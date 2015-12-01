@@ -16,6 +16,8 @@ from .models import ProjectBuild
 from .models import SystemAudit
 from .models import Cluster
 import configparser
+import MySQLdb as db
+
 
 config = configparser.ConfigParser()
 config.read('config.txt')
@@ -32,7 +34,11 @@ def register(request):
                 password=form.cleaned_data['password1'],
                 email=form.cleaned_data['email']
             )
+        create_databaseschema(user)
         return HttpResponseRedirect('/register/success/')
+
+
+
 
     else:
         form = RegistrationForm()
@@ -45,6 +51,10 @@ def register(request):
             variables,
         )
 
+def create_databaseschema(user):
+    con = db.connect(host='127.0.0.1',user="pi",passwd="raspberry")
+    cur = con.cursor()
+    cur.execute('CREATE DATABASE '+user.username)
 
 
 
