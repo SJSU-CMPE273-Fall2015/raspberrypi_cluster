@@ -41,7 +41,6 @@
         </div>
         <div class="box-content">
             <div class="row-fluid hideInIE8 circleStats">
-                {% if p %}
                 <table class="table table-striped table-bordered bootstrap-datatable datatable">
                     <thead>
                     <tr>
@@ -49,43 +48,19 @@
                         <th>Project URL</th>
                         <th>Project Owner</th>
                         <th>Project Last Build Time</th>
-                        <th>Status</th>
                         <th>Project Creation Time</th>
-                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for project in p %}
                     <tr>
-                        <td>{{project.project_name}}</td>
-                        <td>{{project.url}}</td>
-                        <td>{{project.owner}}</td>
-                        <td>{{project.last_build_time}}</td>
-                        <td id="image{{project.id}}"></td>
-                        <td>{{project.created_time}}</td>
-                        <td class="center">
-                            <button type="button" class="btn btn-warning"
-                                    onclick="location.href='/edit/{{project.id}}';">Edit
-                            </button>
-                            &nbsp;&nbsp;
-                            <button type="button" class="btn btn-danger"
-                                    onclick="location.href='/delete/{{project.id}}';">Delete
-                            </button>
-                            <button type="button" id="{{project.id}}" class="build_button btn btn-info"
-                                    rel="/home/sayalee/raspberrypi_cluster/master_node/core/static/img/load.gif">Build
-                            </button>
-                            &nbsp;
-                            <button type="button" class="btn btn-success"
-                                    onclick="location.href='/deploy/{{project.id}}';">Deply
-                            </button>
-                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
-                    {% endfor %}
                 </table>
-                {% else %}
-                <p>No project in the database</p>
-                {% endif %}
             </div>
         </div>
     </div>
