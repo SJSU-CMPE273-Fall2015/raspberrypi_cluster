@@ -206,6 +206,13 @@ class QueueManager(object):
         task = queue.dequeue()
         return task
 
+    def fetch(self, topic):
+        queue = self.getQueue(topic)
+        if queue is None:
+            return False
+        task = queue.pop()
+        return task
+
     def addToSuccessQueue(self, topic, task_id):
         if topic not in self.queues:
             return False
