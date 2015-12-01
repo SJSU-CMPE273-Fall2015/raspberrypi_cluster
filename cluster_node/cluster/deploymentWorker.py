@@ -4,6 +4,7 @@
 __author__ = 'aditya'
 
 import http.client,urllib.parse
+
 import json
 import time
 import traceback
@@ -17,7 +18,9 @@ from subprocess import Popen,PIPE
 import re
 
 # Base url to store cloned project
-base_path = "/home/adityasharma/Desktop/"
+#base_path = "/home/adityasharma/Desktop/"
+
+
 script_path = os.getcwd()
 
 from django.http import HttpResponse
@@ -25,13 +28,22 @@ from django.http import HttpResponse
 
 config = configparser.ConfigParser()
 config.read('config.txt')
-master_ip = config['CONFIGURATION']['MASTER_IP']
-cluster_id = config['CONFIGURATION']['CLUSTER_ID']
-rq_id = config['CONFIGURATION']['RQ_ID']
-num_clusters = config['CONFIGURATION']['NUMBER_OF_CLUSTERS']
+master_ip = config['CONFIGURATION']['master_ip']
+cluster_id = config['CONFIGURATION']['cluster_id']
+rq_id = config['CONFIGURATION']['rq_id']
+num_clusters = config['CONFIGURATION']['number_of_clusters']
 
 path = "/home/adityasharma/Desktop/py_MIUT5A.tar.gz"
-outpath = "/home/adityasharma/Desktop/"
+
+serverName = master_ip
+
+#path = config['CONFIGURATION']['DESKTOP_PATH']+"/"+""
+
+#outpath = "/home/adityasharma/Desktop/"
+
+outpath = config['CONFIGURATION']['deployment_path']
+base_path = config['CONFIGURATION']['deployment_path']
+
 extractFolderName = ""
 portNumberURL = ""
 
@@ -105,21 +117,51 @@ def getProcessID():
         for each in pids:
             print(each)
 
+def copyToRemote(fileName,user,serverName,destinationPath):
 
+    print("Inside the SCP Functionality")
+
+    print("Filename "+fileName)
+    print("ServerName "+serverName)
+    print("Destination Path"+destinationPath)
+
+    os.system("scp "+fileName+" "+user+"@"+serverName+":"+destinationPath)
+    # e.g. os.system("scp foo.bar joe@srvr.net:/path/to/foo.bar")
+    #To be followed : You need to generate (on the source machine)
+    # and install (on the destination machine) an ssh key beforehand so that the
+    # scp automatically gets authenticated with your public ssh key
+    # (in other words, so your script doesn't ask for a password)
+    pass
 
 def deployProject(task):
     print("DEPLOYING PROJECT#", task['project_id'])
 
-    fh = open(path)
+    fullFilePath = task['build_location']
 
-    p = path.split('/')
+    p = fullFilePath.split('/')
+
+    fileName = p[len(p) - 1].split('.')[0].split('_')[1]
 
     global extractFolderName
-    extractFolderName = outpath + p[len(p) - 1].split('.')[0].split('_')[1]
+
+    #extractFolderName = outpath + p[len(p) - 1].split('.')[0].split('_')[1]
+
+    extractFolderName = outpath + fileName
 
     print("File has been extracetd at the location "+extractFolderName)
 
-    tarExt = tarfile.open(path)
+    copyToRemote(fileName,'pi',serverName, outpath)
+
+    #fh = open(path)
+
+    #p = path.split('/')
+
+    # global extractFolderName
+    # extractFolderName = outpath + p[len(p) - 1].split('.')[0].split('_')[1]
+    #
+    # print("File has been extracetd at the location "+extractFolderName)
+
+    tarExt = tarfile.open(extractFolderName+".tar.gz")
 
     #Extract the Tar file contents to the Desktop and the Extract all would then name the Fodler as the Tar File name
     tarExt.extractall(outpath)
