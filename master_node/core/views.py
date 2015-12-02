@@ -1,6 +1,7 @@
 import json
 import http.client
 
+import MySQLdb as db
 from core.forms import *
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
@@ -13,6 +14,7 @@ from .models import Project
 from .models import ClusterProject
 from .models import ProjectAudit
 from .models import ProjectBuild
+from .models import DBuser
 from .models import SystemAudit
 from .models import Cluster
 import configparser
@@ -60,6 +62,17 @@ def create_databaseschema(user):
 
 
 
+def create_databaseschema(user):
+    con = db.connect(host='127.0.0.1', user="pi", passwd='raspberry')
+    cur = con.cursor()
+    cur.execute('CREATE DATABASE ' + 'clusterdb_' + user.username)
+    entry = DBuser()
+    entry.user_id = user.id
+    entry.url = '192.168.137.4:3306'
+    entry.dbname = 'clusterdb_' + user.username
+    entry.save()
+
+
 def register_success(request):
     return render_to_response(
         'registration/success.html',
@@ -71,10 +84,26 @@ def logout_page(request):
     return HttpResponseRedirect('/')
 
 
+def getProjects(request):
+    projects = Project.objects.all()
+    output = []
+    for project in projects:
+        output.append(project.to_dict())
+    return HttpResponse(json.dumps(output))
+
+
 def home(request):
     people = Project.objects.filter(owner=request.user)
+    print(request.user.id)
+    db = DBuser.objects.filter(user_id = request.user.id)
+    response = {}
+    if len(db) > 0:
+        response['user'] = db[0].user.username
+        response['url'] = db[0].url
+        response['dbname'] = db[0].dbname
+    print(response)
     t = loader.get_template('home.html')
-    c = Context({'people': people})
+    c = Context({'people': people, 'profiles': response})
     return HttpResponse(t.render(c))
 
 
@@ -136,7 +165,4 @@ def checkStatus(request):
     data = response.read()
     conn.close()
     return HttpResponse(data)
-
-
-
 
