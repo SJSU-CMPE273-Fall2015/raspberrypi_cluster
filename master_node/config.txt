@@ -1,0 +1,3 @@
+[CONFIGURATION]
+base_path=~/Desktop
+rq_id=127.0.0.1:4242

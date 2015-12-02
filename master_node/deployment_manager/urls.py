@@ -6,5 +6,6 @@ urlpatterns = [
     url(r'^(?P<project_id>\d{0,11})$', views.deployProject, name='views.deployProject'),
     url(r'^/reportStatus$', views.reportStatus, name='views.reportStatus'),
     #url(r'^?(R<report_id>\d{0,11})$', views.reportStatus, name='views.reportStatus'),
+    url(r'^/migrate$', views.deployProjectWithHighPriority, name='views.deployProjectWithHighPriority'),
 
 ]

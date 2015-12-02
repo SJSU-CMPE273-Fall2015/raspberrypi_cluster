@@ -16,4 +16,7 @@ urlpatterns = [
     # checkStatus
     url(r'^checkStatus$', views.checkStatus, name='views.checkStatus'),
 
+    # fetch
+    url(r'^fetch/(?P<topic>\w{0,50})$', views.fetch, name='views.checkStatus'),
+
 ]

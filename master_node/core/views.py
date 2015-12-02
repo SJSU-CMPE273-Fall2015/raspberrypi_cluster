@@ -15,6 +15,15 @@ from .models import ClusterProject
 from .models import ProjectAudit
 from .models import ProjectBuild
 from .models import DBuser
+from .models import SystemAudit
+from .models import Cluster
+import configparser
+import MySQLdb as db
+
+
+config = configparser.ConfigParser()
+config.read('config.txt')
+rq_id = config['CONFIGURATION']['RQ_ID']
 
 
 @csrf_protect
@@ -30,6 +39,9 @@ def register(request):
         create_databaseschema(user)
         return HttpResponseRedirect('/register/success/')
 
+
+
+
     else:
         form = RegistrationForm()
         variables = RequestContext(request, {
@@ -40,6 +52,14 @@ def register(request):
             'registration/register.html',
             variables,
         )
+
+def create_databaseschema(user):
+    con = db.connect(host='127.0.0.1',user="pi",passwd="raspberry")
+    cur = con.cursor()
+    cur.execute('CREATE DATABASE '+user.username)
+
+
+
 
 
 def create_databaseschema(user):
@@ -139,9 +159,10 @@ def checkStatus(request):
     body_data = json.loads(body_unicode)
     params = json.dumps(body_data)
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-    conn = http.client.HTTPConnection("localhost:4242")
+    conn = http.client.HTTPConnection(rq_id)
     conn.request("POST", "/queue/checkStatus", params, headers)
     response = conn.getresponse()
     data = response.read()
     conn.close()
     return HttpResponse(data)
+

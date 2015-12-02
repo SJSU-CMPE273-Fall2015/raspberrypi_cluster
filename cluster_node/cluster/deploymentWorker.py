@@ -4,6 +4,7 @@
 __author__ = 'aditya'
 
 import http.client,urllib.parse
+
 import json
 import time
 import traceback
@@ -17,7 +18,9 @@ from subprocess import Popen,PIPE
 import re
 
 # Base url to store cloned project
-base_path = "/home/adityasharma/Desktop/"
+#base_path = "/home/adityasharma/Desktop/"
+
+
 script_path = os.getcwd()
 
 from django.http import HttpResponse
@@ -25,14 +28,24 @@ from django.http import HttpResponse
 
 config = configparser.ConfigParser()
 config.read('config.txt')
-master_ip = config['CONFIGURATION']['MASTER_IP']
-cluster_id = config['CONFIGURATION']['CLUSTER_ID']
-rq_id = config['CONFIGURATION']['RQ_ID']
-num_clusters = config['CONFIGURATION']['NUMBER_OF_CLUSTERS']
+master_ip = config['CONFIGURATION']['master_ip']
+cluster_id = config['CONFIGURATION']['cluster_id']
+rq_id = config['CONFIGURATION']['rq_id']
+num_clusters = config['CONFIGURATION']['number_of_clusters']
 
 path = "/home/adityasharma/Desktop/py_MIUT5A.tar.gz"
-outpath = "/home/adityasharma/Desktop/"
+
+serverName = master_ip
+
+#path = config['CONFIGURATION']['DESKTOP_PATH']+"/"+""
+
+#outpath = "/home/adityasharma/Desktop/"
+
+outpath = config['CONFIGURATION']['deployment_path']
+base_path = config['CONFIGURATION']['deployment_path']
+
 extractFolderName = ""
+portNumberURL = ""
 
 
 
@@ -76,7 +89,7 @@ class NodeClusterManager:
                     addToQueue(True,request)
                     #add logic to extract zip files and to make POST call to the Server and pass the cluster_id and Project_id
                     #topic =
-                    post_data = json.dumps({'cluster_id' : cluster_id,'project_id' : task['project_id']})
+                    post_data = json.dumps({'cluster_id' : cluster_id,'project_id' : task['project_id'],'url':portNumberURL})
                     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
                     conn = http.client.HTTPConnection(master_ip)
                     conn.request("POST", "/deployment_manager/reportStatus", post_data, headers)
@@ -85,8 +98,6 @@ class NodeClusterManager:
                     data = response.read
                     print(data)
                     conn.close()
-                    #Call to get the process id of the process that has been started recently from our end
-                    #getProcessID()
 
                 except Exception:
                     print(traceback.format_exc())
@@ -106,21 +117,51 @@ def getProcessID():
         for each in pids:
             print(each)
 
+def copyToRemote(fileName,user,serverName,destinationPath):
 
+    print("Inside the SCP Functionality")
+
+    print("Filename "+fileName)
+    print("ServerName "+serverName)
+    print("Destination Path"+destinationPath)
+
+    os.system("scp "+fileName+" "+user+"@"+serverName+":"+destinationPath)
+    # e.g. os.system("scp foo.bar joe@srvr.net:/path/to/foo.bar")
+    #To be followed : You need to generate (on the source machine)
+    # and install (on the destination machine) an ssh key beforehand so that the
+    # scp automatically gets authenticated with your public ssh key
+    # (in other words, so your script doesn't ask for a password)
+    pass
 
 def deployProject(task):
     print("DEPLOYING PROJECT#", task['project_id'])
 
-    fh = open(path)
+    fullFilePath = task['build_location']
 
-    p = path.split('/')
+    p = fullFilePath.split('/')
+
+    fileName = p[len(p) - 1].split('.')[0].split('_')[1]
 
     global extractFolderName
-    extractFolderName = outpath + p[len(p) - 1].split('.')[0].split('_')[1]
+
+    #extractFolderName = outpath + p[len(p) - 1].split('.')[0].split('_')[1]
+
+    extractFolderName = outpath + fileName
 
     print("File has been extracetd at the location "+extractFolderName)
 
-    tarExt = tarfile.open(path)
+    copyToRemote(fileName,'pi',serverName, outpath)
+
+    #fh = open(path)
+
+    #p = path.split('/')
+
+    # global extractFolderName
+    # extractFolderName = outpath + p[len(p) - 1].split('.')[0].split('_')[1]
+    #
+    # print("File has been extracetd at the location "+extractFolderName)
+
+    tarExt = tarfile.open(extractFolderName+".tar.gz")
 
     #Extract the Tar file contents to the Desktop and the Extract all would then name the Fodler as the Tar File name
     tarExt.extractall(outpath)
@@ -151,52 +192,10 @@ def executeFile():
 
     cmd = "./param_runserver.sh"
 
+    print("Current working directory is "+os.getcwd())
 
-    # subprocess.call('echo $HOME',shell=True)
-    #
-    # subprocess.call('echo $PWD',shell=True)
-
-    #subprocess.call('$python home/adityasharma/Desktop/ZZ64Y0/manage.py runserver 5656',shell=True)
-
-    # print ('\nread:')
-    # proc = subprocess.Popen(['echo', '"to stdout"'],
-    #                     stdout=subprocess.PIPE,
-    #                     )
-    # stdout_value = proc.communicate()[0]
-    # print ('\tstdout:', repr(stdout_value))
-
-    #path1 = "home/adityasharma/Desktop/ZZ64Y0/manage.py"
-
-    # dataFile = open("/home/adityasharma/Desktop/ZZ64Y0/manage.py",'r')
-    #
-    #
-    #
-    #
-    # print ('\nread:')
-    # proc1 = subprocess.Popen('python '+path1+' runserver',stdout=subprocess.PIPE,shell=True,stdin=subprocess.PIPE)
-    # stdout_value1 = proc1.communicate()[0]
-    # print ('\tstdout:', repr(stdout_value1))
-
-    # proc1 = subprocess.Popen(['python','manage.py','runserver',' 5656'],shell=True,stdout=PIPE,stderr=PIPE)
-    #
-    # out1,err1 = proc1.communicate()
-    #
-    # print("Error Value :"+str(err1.rstrip()))
-
-    # output = subprocess.check_output(['python','manage.py','runserver','5656'])
-    #
-    # print(output)
-
-    #subprocess.call(cmd,shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-
-    #cmd = "python manage.py runserver ~/"
-
-    #cmd = "python /home/adityasharma/Desktop/ZZ64Y0/test.py"
-
-
-    #subprocess.call(['gnome-terminal','-x',cmd])
-
-    print(os.getcwd())
+    global portNumberURL
+    portNumberURL = "127.0.0.1:"+str(NodeClusterManager.portNumber)
 
     rtnVal = subprocess.check_call(['gnome-terminal','-x',cmd,str(extractFolderName+"/"),str(NodeClusterManager.portNumber)])
 
@@ -206,33 +205,6 @@ def executeFile():
         return False
     else:
         return True
-
-
-
-    #Comment to test Gnome Terminal Functionality.
-    #######p = subprocess.Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE)
-
-    #dataFile = open("/home/adityasharma/Desktop/ZZ64Y0/manage.py",'r')
-
-    #p = subprocess.Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE,stdin=dataFile)
-
-    #p = subprocess.Popen([dataFile, cmd],stdout=subprocess.PIPE)
-
-    #p =subprocess.call(["python /home/adityasharma/Desktop/ZZ64Y0/manage.py runserver"])
-
-    #os.system("/home/adityasharma/Desktop/ZZ64Y0/manage.py runserver 5656")
-
-
-    # out,err = p.communicate()
-    # print("Return Code:" +str(p.returncode))
-    # print("Out.rstrip  value "+str(out.rstrip()))
-    # print("Error Value :"+str(err.rstrip()))
-    # error = err.rstrip()
-    # print(error)
-    # if not error:
-    #     return False
-    # else:
-    #     return True
 
 
 def addToQueue(success, request):

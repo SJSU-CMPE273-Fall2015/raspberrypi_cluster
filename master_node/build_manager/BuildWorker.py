@@ -1,13 +1,18 @@
 __author__ = 'saurabh'
 import http.client
 import json
-from .BuildManager import find_project
 import time
 import traceback
+import configparser
 
+from .BuildManager import find_project
+
+config = configparser.ConfigParser()
+config.read('config.txt')
+rq_id = config['CONFIGURATION']['RQ_ID']
 
 def fetchTask():
-    conn = http.client.HTTPConnection("localhost:4242")
+    conn = http.client.HTTPConnection(rq_id)
     conn.request("GET", "/queue/dequeue/Build_Manager_Queue1")
     r1 = conn.getresponse()
     print(r1.status, r1.reason)
@@ -34,7 +39,7 @@ def fetchTask():
 def addToQueue(success, request):
     params = json.dumps({"topic": "Build_Manager_Queue1", "task_id": request['task_id']})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-    conn = http.client.HTTPConnection("localhost:4242")
+    conn = http.client.HTTPConnection(rq_id)
     if success:
         conn.request("POST", "/queue/successq", params, headers)
     else:

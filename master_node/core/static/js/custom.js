@@ -1719,9 +1719,9 @@ function charts() {
 	var gauge7 = loadLiquidFillGauge("fillgauge7", 0.2, config2);
 	var gauge8 = loadLiquidFillGauge("fillgauge8", 0.2, config1);
 	var gauge9 = loadLiquidFillGauge("fillgauge9", 0.2, config3);
-	var gauge10 = loadLiquidFillGauge("fillgauge10", 0.2, config2);
-	var gauge11 = loadLiquidFillGauge("fillgauge11", 0.2, config1);
-	var gauge12 = loadLiquidFillGauge("fillgauge12", 0.2, config3);
+	//var gauge10 = loadLiquidFillGauge("fillgauge10", 0.2, config2);
+	//var gauge11 = loadLiquidFillGauge("fillgauge11", 0.2, config1);
+	//var gauge12 = loadLiquidFillGauge("fillgauge12", 0.2, config3);
 	//Guage Confg End
 
 	//AJAX Call for Projects
@@ -1804,7 +1804,7 @@ function charts() {
 			// since the axes don't change, we don't need to call plot.setupGrid()
 			plot.draw();
 			console.log("!!!!!!!!!"+ id);
-			if(id === 1){
+			if(id == 1){
 			gauge1.update(row[0]);
 			gauge2.update(row[1]);
 			gauge3.update(row[2]);
@@ -1819,11 +1819,11 @@ function charts() {
 			gauge8.update(row[1]);
 			gauge9.update(row[2]);
 			}
-			else if(id == 4){
+			/*else if(id == 4){
 			gauge10.update(row[0]);
 			gauge11.update(row[1]);
 			gauge12.update(row[2]);
-			}
+			}*/
 		}
 
 		update();

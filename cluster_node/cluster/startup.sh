@@ -16,6 +16,14 @@ start_system_statistics() {
 
 }
 
+pwd
+#Changes Start Here for starting deployment worker.py in new terminal
+gnome-terminal -e "bash -c \"sh startup_deployment.sh exec bash\""
+
+
+
+#changes end here
+
 register_cluster
 pid1=$!
 start_system_statistics

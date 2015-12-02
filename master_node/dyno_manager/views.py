@@ -1,4 +1,5 @@
 import json
+import http.client
 
 from core.models import SystemAudit, Cluster
 from django.http import HttpResponse
@@ -16,6 +17,15 @@ def systemstatus(request):
                              )
     auditEntry.cluster_id = stat['cluster']
     auditEntry.save()
+    data = json.dumps({'cluster_id': stat['cluster']})
+    params = json.dumps({"topic": "Dyno_Manager", "data": data, "priority": 3})
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+    conn = http.client.HTTPConnection("localhost:4242")
+    conn.request("POST", "/queue/enqueue", params, headers)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+
     return HttpResponse(stat.__str__())
 
 
@@ -55,5 +65,5 @@ def getStats(request):
         data['disk'] = stats[0].disk_usage
         data['network'] = stats[0].network_usage
         data['cpu'] = cpu_data
-        reply[cluster.id] = data
+        reply[cluster.type] = data
     return HttpResponse(json.dumps(reply))
