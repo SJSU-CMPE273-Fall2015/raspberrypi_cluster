@@ -15,5 +15,6 @@ urlpatterns = patterns('',
     url(r'^delete/(?P<project_id>\d+)$', views.delete, name='delete'),
     url(r'^edit/(?P<project_id>\d+)$', views.edit, name='edit'),
     url(r'^info/$', views.info, name='info'),
+    url(r'^allprojects$', views.getProjects, name='views.getProjects'),
     url(r'^checkStatus/$', views.checkStatus, name='CheckStatus')
 )

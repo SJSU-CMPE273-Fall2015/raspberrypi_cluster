@@ -1719,14 +1719,36 @@ function charts() {
 	var gauge7 = loadLiquidFillGauge("fillgauge7", 0.2, config2);
 	var gauge8 = loadLiquidFillGauge("fillgauge8", 0.2, config1);
 	var gauge9 = loadLiquidFillGauge("fillgauge9", 0.2, config3);
-	var gauge10 = loadLiquidFillGauge("fillgauge10", 0.2, config2);
-	var gauge11 = loadLiquidFillGauge("fillgauge11", 0.2, config1);
-	var gauge12 = loadLiquidFillGauge("fillgauge12", 0.2, config3);
+	//var gauge10 = loadLiquidFillGauge("fillgauge10", 0.2, config2);
+	//var gauge11 = loadLiquidFillGauge("fillgauge11", 0.2, config1);
+	//var gauge12 = loadLiquidFillGauge("fillgauge12", 0.2, config3);
 	//Guage Confg End
+
+	//AJAX Call for Projects
+	getProjects();
+	function getProjects(){
+		$(function() {
+   				var project = [];
+
+   				$.getJSON('http://localhost:8000/allprojects', function(data) {
+       				$.each(data, function(i, f) {
+          var tblRow = "<tr>" + "<td>" + f.project_name + "</td>" +
+           "<td>" + f.url + "</td>" + "<td>" + f.owner + "</td>" + "<td>" + f.created_time + "</td>" + "</tr>"
+           $(tblRow).appendTo("#table tbody");
+     });
+
+   });
+
+});
+	};
+
+	//Projects End
 	var data = [], totalPoints = 30;
 	var res1 = [];
+	var map = new Object();
+	getRandomData();
 	function getRandomData() {
-		var res = [];
+
 
         if (data.length > 0)
 			data = data.slice(1);
@@ -1735,36 +1757,79 @@ function charts() {
         		dataType : 'json',
         		async : false,
         		success : function(result) {
-            	$.each(result.cpu, function(key, val) { data.push(val[1]); });
-            	res1[0]=result.memory;
-				res1[1]=result.disk;
-				res1[2]=result.network;
+						$.each(result, function(key, val) {
+							map[key] = val;
+						});
             }
 			});
 
-		for (var i = 0; i < data.length; ++i)
-			res.push([i, data[i]])
+			for (var i in map){
+				data = [];
+				$.each(map[i].cpu, function(key, val) { data.push(val[1]); });
+				res1.splice(0,res1.length);
+				res1[0]=map[i].memory;
+				res1[1]=map[i].disk;
+				res1[2]=map[i].network;
+				var res = [];
+				for (var j = 0; j < data.length; ++j)
+					res.push([j, data[j]])
+				res1[3] = res;
+				console.log(i)
+				populateRow(i, res1);
+			}
 
-		return res;
+		setTimeout(getRandomData, 5000);
+		return res1;
 	}
 
-	// setup control widget
-	var updateInterval = 5000;
-	$("#updateInterval").val(updateInterval).change(function () {
-		var v = $(this).val();
-		if (v && !isNaN(+v)) {
-			updateInterval = +v;
-			if (updateInterval < 1)
-				updateInterval = 1;
-			if (updateInterval > 2000)
-				updateInterval = 2000;
-			$(this).val("" + updateInterval);
-		}
-	});
+	function populateRow(id, row){
+		//Chart1
+		if($("#"+id).length)
+	{
+	console.log("!!!!!!!!!"+ id);
+		var options = {
+			series: { shadowSize: 1 },
+			lines: { show: true, lineWidth: 2, fill: true, fillColor: { colors: [ { opacity: 0.9 }, { opacity: 0.9 } ] }},
+			yaxis: { min: 0, max: 100, tickFormatter: function (v) { return v + "%"; }, color: "rgba(255,255,255,0.8)"},
+			xaxis: { show: false, color: "rgba(255,255,255,0.8)" },
+			colors: ["rgba(255,255,255,0.95)"],
+			grid: {	tickColor: "rgba(255,255,255,0.15)",
+					borderWidth: 0,
+			},
+		};
+		var plot = $.plot($("#"+id), [ row[3] ], options);
 
-	/* ---------- Realtime chart ---------- */
-	//Chart1
-		if($("#serverLoad1").length)
+		function update() {
+			plot.setData([ row[3] ]);
+			// since the axes don't change, we don't need to call plot.setupGrid()
+			plot.draw();
+			console.log("!!!!!!!!!"+ id);
+			if(id == 1){
+			gauge1.update(row[0]);
+			gauge2.update(row[1]);
+			gauge3.update(row[2]);
+			}
+			else if(id == 2){
+			gauge4.update(row[0]);
+			gauge5.update(row[1]);
+			gauge6.update(row[2]);
+			}
+			else if(id == 3){
+			gauge7.update(row[0]);
+			gauge8.update(row[1]);
+			gauge9.update(row[2]);
+			}
+			/*else if(id == 4){
+			gauge10.update(row[0]);
+			gauge11.update(row[1]);
+			gauge12.update(row[2]);
+			}*/
+		}
+
+		update();
+	}
+	//Chart2
+	/*if($("#serverLoad2").length)
 	{
 		var options = {
 			series: { shadowSize: 1 },
@@ -1776,33 +1841,6 @@ function charts() {
 					borderWidth: 0,
 			},
 		};
-		var plot = $.plot($("#serverLoad1"), [ getRandomData() ], options);
-		function update() {
-			plot.setData([ getRandomData() ]);
-			// since the axes don't change, we don't need to call plot.setupGrid()
-			plot.draw();
-
-			gauge1.update(res1[0]);
-			gauge2.update(res1[1]);
-			gauge3.update(res1[2]);
-			setTimeout(update, updateInterval);
-		}
-
-		update();
-	}
-	//Chart2
-	if($("#serverLoad2").length)
-	{	
-		var options = {
-			series: { shadowSize: 1 },
-			lines: { show: true, lineWidth: 2, fill: true, fillColor: { colors: [ { opacity: 0.9 }, { opacity: 0.9 } ] }},
-			yaxis: { min: 0, max: 100, tickFormatter: function (v) { return v + "%"; }, color: "rgba(255,255,255,0.8)"},
-			xaxis: { show: false, color: "rgba(255,255,255,0.8)" },
-			colors: ["rgba(255,255,255,0.95)"],
-			grid: {	tickColor: "rgba(255,255,255,0.15)",
-					borderWidth: 0, 
-			},
-		};
 		var plot = $.plot($("#serverLoad2"), [ getRandomData() ], options);
 		function update() {
 			plot.setData([ getRandomData() ]);
@@ -1812,7 +1850,7 @@ function charts() {
 			gauge4.update(res1[0]);
 			gauge5.update(res1[1]);
 			gauge6.update(res1[2]);
-			setTimeout(update, updateInterval);
+			//setTimeout(update, updateInterval);
 		}
 
 		update();
@@ -1839,7 +1877,7 @@ function charts() {
 			gauge7.update(res1[0]);
 			gauge8.update(res1[1]);
 			gauge9.update(res1[2]);
-			setTimeout(update, updateInterval);
+			//setTimeout(update, updateInterval);
 		}
 
 		update();
@@ -1866,12 +1904,29 @@ function charts() {
 			gauge10.update(res1[0]);
 			gauge11.update(res1[1]);
 			gauge12.update(res1[2]);
-			setTimeout(update, updateInterval);
+			//setTimeout(update, updateInterval);
 		}
 
 		update();
-	}
+	}*/
 	//ENd Chart
+	}
+	// setup control widget
+	var updateInterval = 5000;
+	$("#updateInterval").val(updateInterval).change(function () {
+		var v = $(this).val();
+		if (v && !isNaN(+v)) {
+			updateInterval = +v;
+			if (updateInterval < 1)
+				updateInterval = 1;
+			if (updateInterval > 2000)
+				updateInterval = 2000;
+			$(this).val("" + updateInterval);
+		}
+	});
+
+	/* ---------- Realtime chart ---------- */
+
 	if($("#realtimechart").length)
 	{
 		var options = {
@@ -2268,7 +2323,7 @@ function widthFunctions(e) {
 			}
 			  			
 		});
-		
+
 		$(".statbox").each(function(){
 			
 			var getOnTablet = $(this).attr('onTablet');
@@ -2381,3 +2436,5 @@ function widthFunctions(e) {
 	}
 
 }
+
+
