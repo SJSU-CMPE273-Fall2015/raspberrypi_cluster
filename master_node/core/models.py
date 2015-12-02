@@ -29,13 +29,22 @@ class Project(models.Model):
     def __str__(self):
         return self.project_name
 
+    def to_dict(self):
+        data = {}
+        data['project_name'] = self.project_name
+        data['url'] = self.url
+        data['owner'] = self.owner.username
+        data['last_build_time'] = str(self.last_build_time)
+        data['created_time'] = str(self.created_time)
+        return data
+
 
 class Cluster(models.Model):
     ip = models.GenericIPAddressField(max_length=20, null=True)
     location = models.CharField(max_length=255, null=True)
     type = models.CharField(max_length=255, null=True)
     last_boot_time = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=255, null = True)
+    status = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.ip
@@ -53,14 +62,15 @@ class SystemAudit(models.Model):
         return str(self.cluster) + ":" + str(self.time)
 
     def to_dict(self):
-        data={}
-        data['disk_usage']=self.disk_usage
-        data['memory_usage']=self.memory_usage
-        data['cpu_usage']=self.cpu_usage
-        data['network_usage']=self.network_usage
-        data['cluster']=self.cluster.ip
-        data['time']=self.time
+        data = {}
+        data['disk_usage'] = self.disk_usage
+        data['memory_usage'] = self.memory_usage
+        data['cpu_usage'] = self.cpu_usage
+        data['network_usage'] = self.network_usage
+        data['cluster'] = self.cluster.ip
+        data['time'] = self.time
         return data
+
 
 class ProjectAudit(models.Model):
     message = models.CharField(max_length=255, null=True)
@@ -77,7 +87,7 @@ class ClusterProject(models.Model):
     project = models.ForeignKey(Project, null=True)
     status = models.CharField(max_length=255, null=True)
     time = models.DateTimeField(auto_now_add=True)
-    #newly added.
+    # newly added.
     url = models.CharField(max_length=255, null=True)
     pid = models.IntegerField(blank=False)
 
@@ -93,3 +103,9 @@ class ProjectBuild(models.Model):
 
     def __str__(self):
         return str(self.project) + ":" + str(self.time)
+
+
+class DBuser(models.Model):
+    user = models.ForeignKey(User, null=True)
+    url = models.URLField(max_length=255, null=True)
+    dbname = models.CharField(max_length=255, null=True)

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-BaseDir='/home/saurabh/Desktop/'
+BaseDir='/home/pi/Desktop/'
 cd $BaseDir$1
 virtualenv -p /usr/bin/python3 env
 source env/bin/activate

@@ -1,3 +1,5 @@
+import configparser
+
 __author__ = 'saurabh'
 
 import os
@@ -18,6 +20,9 @@ django.setup()
 
 import http.client
 
+config = configparser.ConfigParser()
+config.read('config.txt')
+rq_id = config['CONFIGURATION']['RQ_ID']
 
 class DynoManager():
     def __init__(self):

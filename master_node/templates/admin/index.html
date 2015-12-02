@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Admin Dashboard</title>
     <style>
         .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
     </style>
@@ -41,24 +41,17 @@
         </div>
         <div class="box-content">
             <div class="row-fluid hideInIE8 circleStats">
-                <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                <table id="table" class="table table-striped table-bordered ">
                     <thead>
                     <tr>
                         <th>Project Name</th>
                         <th>Project URL</th>
                         <th>Project Owner</th>
-                        <th>Project Last Build Time</th>
                         <th>Project Creation Time</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -77,17 +70,36 @@
         </div>
     </div>
     <div class="box-content">
-                <svg id="fillgauge1" width="19%" height="200"></svg>
-				<svg id="fillgauge2" width="19%" height="200"></svg>
-				<svg id="fillgauge3" width="19%" height="200"></svg>
 
 
-
-	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+        <div class="box span2">
+            <div class="box-header" data-original-title>Memory Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge1" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span2">
+            <div class="box-header" data-original-title>Disk Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge2" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span2">
+            <div class="box-header" data-original-title>Network Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge3" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span5">
+            <div class="box-header" data-original-title>CPU Usage</div>
+            <div class="box-content">
+                <div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad1" style="height:105px;"></div>
+                <div id="1" data-type="1" style="height:105px;"></div>
+            </div>
+        </div>
             </div>
         </div>
 
@@ -107,19 +119,37 @@
         </div>
     </div>
     <div class="box-content">
-                <svg id="fillgauge4" width="19%" height="200"></svg>
-				<svg id="fillgauge5" width="19%" height="200"></svg>
-				<svg id="fillgauge6" width="19%" height="200"></svg>
-
-
-
-	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+          <div class="box span2">
+            <div class="box-header" data-original-title>Memory Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge4" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span2">
+            <div class="box-header" data-original-title>Disk Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge5" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span2">
+            <div class="box-header" data-original-title>Network Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge6" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span5">
+            <div class="box-header" data-original-title>CPU Usage</div>
+            <div class="box-content">
+                <div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad2" style="height:105px;"></div>
+                <div id="2" data-type="1" style="height:105px;"></div>
             </div>
         </div>
+            </div>
+        </div>
+
 
     </div>
 </div>
@@ -137,17 +167,34 @@
         </div>
     </div>
     <div class="box-content">
-                <svg id="fillgauge7" width="19%" height="200"></svg>
-				<svg id="fillgauge8" width="19%" height="200"></svg>
-				<svg id="fillgauge9" width="19%" height="200"></svg>
-
-
-
-	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+         <div class="box span2">
+            <div class="box-header" data-original-title>Memory Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge7" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span2">
+            <div class="box-header" data-original-title>Disk Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge8" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span2">
+            <div class="box-header" data-original-title>Network Usage</div>
+            <div class="box-content">
+                <svg id="fillgauge9" width="99%" height="200" ></svg>
+            </div>
+        </div>
+         <div class="box span5">
+            <div class="box-header" data-original-title>CPU Usage</div>
+            <div class="box-content">
+                <div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad3" style="height:105px;"></div>
+                <div id="3" data-type="1" style="height:105px;"></div>
+            </div>
+        </div>
             </div>
         </div>
 
@@ -157,29 +204,30 @@
 </div>
 <!-- End 3nd Node -->
 <div class="box span12">
-    <div class="box-header" data-original-title>
-        <h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
+   <!--  <div class="box-header" data-original-title>
+            <h2><i class="halflings-icon edit"></i><span class="break"></span>Slave Node</h2>
 
-        <div class="box-icon">
+            <div class="box-icon">
             <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
             <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
             <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
-        </div>
-    </div>
+            </div>
+    </div> -->
     <div class="box-content">
-                <svg id="fillgauge10" width="19%" height="200"></svg>
+            <!--    <svg id="fillgauge10" width="19%" height="200"></svg>
 				<svg id="fillgauge11" width="19%" height="200"></svg>
 				<svg id="fillgauge12" width="19%" height="200"></svg>
 
 
-
-	<div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
+         4th node no being use
+	        <div class="widget blue span4 noMargin" onTablet="span12" onDesktop="span4">
             <h2><span class="fire"><i></i></span> Server Load</h2>
             <hr>
             <div class="content">
-                <div id="serverLoad4" style="height:105px;"></div>
+                <div id="4" data-type="4" style="height:105px;"></div>
             </div>
-        </div>
+            </div>
+            -->
 
     </div>
 </div>
@@ -222,6 +270,9 @@
 <script src="{% static 'js/counter.js' %}"></script>
 <script src="{% static 'js/retina.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
+<script type="text/javascript">
+
+</script>
 <script type="text/javascript">
 	 	/*function updateStatus(){
 	 	    var xmlHttp = new XMLHttpRequest();

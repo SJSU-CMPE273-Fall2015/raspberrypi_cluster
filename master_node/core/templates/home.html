@@ -31,7 +31,23 @@
                     <h2><strong>Database Details</strong></h2>
                 </div>
                 <div class="box-content">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Database URL</th>
+                            <th>Database Name</th>
+                            <th>UserName</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ profiles.url }}</td>
+                            <td>{{profiles.dbname}}</td>
+                            <td>{{profiles.user}}</td>
+                        </tr>
+                        </tbody>
 
+                    </table>
                 </div>
                 </div>
             </div>
@@ -103,7 +119,6 @@
 </div>
 {% endblock %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script type="text/javascript">
 	 	/*function updateStatus(){
