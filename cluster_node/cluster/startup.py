@@ -42,7 +42,7 @@ def register():
     print(data)
 
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-    conn = http.client.HTTPConnection('localhost:8000')
+    conn = http.client.HTTPConnection('192.168.137.4:8000')
     conn.request("POST", "/dyno/register", data, headers)
     response = conn.getresponse().read()
     print(response)
