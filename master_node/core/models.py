@@ -71,6 +71,7 @@ class SystemAudit(models.Model):
         data['time']=self.time
         return data
 
+
 class ProjectAudit(models.Model):
     message = models.CharField(max_length=255, null=True)
     tag = models.CharField(max_length=255, null=True)
@@ -102,3 +103,8 @@ class ProjectBuild(models.Model):
 
     def __str__(self):
         return self.project + ":" + self.time
+
+class DBuser(models.Model):
+    user = models.ForeignKey(User, null=True)
+    url = models.URLField(max_length=255, null=True)
+    dbname = models.CharField(max_length=255, null=True)
