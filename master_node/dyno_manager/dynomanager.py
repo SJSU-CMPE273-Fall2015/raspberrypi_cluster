@@ -96,8 +96,8 @@ class DynoManager():
     def runForever(self):
         print("Starting DynoManager")
         while True:
-            self.check_failure()
             time.sleep(20)
+            self.check_failure()
 
 
 dynomanager = DynoManager()
