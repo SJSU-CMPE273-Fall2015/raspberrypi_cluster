@@ -59,6 +59,8 @@ class NodeClusterManager:
             self.initialize_cluster()
 
     def initialize_cluster(self):
+        print(rq_id)
+
         name = "Deployment_Manager_Queue" + str(cluster_id)
         params = json.dumps({"topic":name , "size": 10})
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
@@ -124,8 +126,8 @@ def copyToRemote(fileName,user,serverName,destinationPath):
     print("Filename "+fileName)
     print("ServerName "+serverName)
     print("Destination Path"+destinationPath)
-
-    os.system("scp "+fileName+" "+user+"@"+serverName+":"+destinationPath)
+    print("scp "+ user +"@"+ serverName+":"+fileName+" "+destinationPath)    
+    os.system("scp "+ user +"@"+ serverName+":"+fileName+" "+destinationPath)    
     # e.g. os.system("scp foo.bar joe@srvr.net:/path/to/foo.bar")
     #To be followed : You need to generate (on the source machine)
     # and install (on the destination machine) an ssh key beforehand so that the
@@ -150,7 +152,7 @@ def deployProject(task):
 
     print("File has been extracetd at the location "+extractFolderName)
 
-    copyToRemote(fileName,'pi',serverName, outpath)
+    copyToRemote(fullFilePath,'pi',"192.168.137.4", outpath)
 
     #fh = open(path)
 
@@ -161,7 +163,7 @@ def deployProject(task):
     #
     # print("File has been extracetd at the location "+extractFolderName)
 
-    tarExt = tarfile.open(extractFolderName+".tar.gz")
+    tarExt = tarfile.open(fullFilePath)
 
     #Extract the Tar file contents to the Desktop and the Extract all would then name the Fodler as the Tar File name
     tarExt.extractall(outpath)

@@ -16,9 +16,11 @@ start_system_statistics() {
 
 }
 
-pwd
+
+
+#pwd
 #Changes Start Here for starting deployment worker.py in new terminal
-gnome-terminal -e "bash -c \"sh startup_deployment.sh exec bash\""
+#gnome-terminal -e "bash -c \"sh startup_deployment.sh exec bash\""
 
 
 
