@@ -94,7 +94,7 @@ class NodeClusterManager:
                     post_data = json.dumps({'cluster_id' : cluster_id,'project_id' : task['project_id'],'url':portNumberURL})
                     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
                     conn = http.client.HTTPConnection(master_ip)
-                    conn.request("POST", "/deployment_manager/reportStatus", post_data, headers)
+                    conn.request("POST", "/deployment_manager/reportStatus/", post_data, headers)
                     response = conn.getresponse()
                     print(response.status,response.reason)
                     data = response.read
@@ -199,14 +199,11 @@ def executeFile():
     global portNumberURL
     portNumberURL = "127.0.0.1:"+str(NodeClusterManager.portNumber)
 
-    rtnVal = subprocess.check_call(['xterm','-hold','-e',cmd,str(extractFolderName+"/"),str(NodeClusterManager.portNumber)])
+    subprocess.Popen(['nohup',cmd,str(extractFolderName+"/"),str(NodeClusterManager.portNumber)])
 
     NodeClusterManager.portNumber += 1
 
-    if rtnVal == 0:
-        return False
-    else:
-        return True
+    return False
 
 
 def addToQueue(success, request):
