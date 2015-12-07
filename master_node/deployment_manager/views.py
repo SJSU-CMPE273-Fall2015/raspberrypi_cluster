@@ -66,20 +66,22 @@ def deployProject(request, project_id):
 
 
 def reportStatus(request):
-    data_project_id = json.loads(request['project_id'])
-    data_cluster_id = json.loads(request['cluster_id'])
-    data_url = json.loads(request['url'])
+    body_unicode = request.body.decode('utf-8')
+    data = json.loads(body_unicode)
+    data_cluster_id = data['cluster_id']
+    data_url = data['url']
     # data_pid = json.loads(request['pid'])
-
+    
+    entry = ClusterProject()
     # Add the entry to the DataBase and to models.py,parse the corresponding entry
-    ClusterProject.cluster = data_cluster_id
-    ClusterProject.project = data_project_id
-    ClusterProject.status = "Deployed"
-    ClusterProject.time = datetime.datetime.now()
-    ClusterProject.url = data_url
-    ClusterProject.pid = 1
+    entry.cluster_id = data_cluster_id
+    entry.project_id = data_project_id
+    entry.status = "Deployed"
+    entry.time = datetime.datetime.now()
+    entry.url = data_url
+    entry.pid = 1
 
-    ClusterProject.save()
+    entry.save()
 
 
 @csrf_exempt
