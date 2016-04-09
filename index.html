@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Raspberrypi cluster by SJSU-CMPE273-Fall2015</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Raspberrypi cluster</h1>
+      <h2 class="project-tagline">Heroku on Raspberry Pi Cluster</h2>
+      <a href="https://github.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster" class="btn">View on GitHub</a>
+      <a href="https://github.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="distributed-computing-using-raspberry-pi" class="anchor" href="#distributed-computing-using-raspberry-pi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Distributed computing using Raspberry PI</h1>
+
+<h3>
+<a id="mini-heroku-on-raspberry-pi-cluster" class="anchor" href="#mini-heroku-on-raspberry-pi-cluster" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mini Heroku on Raspberry PI cluster</h3>
+
+<p><a href="https://www.heroku.com/">https://www.heroku.com/</a> is a leading application hosting platform. In our CMPE-273 Distributed Systems class, we developed a <strong>Raspberry PI cluster</strong> with <strong>3 nodes (1 master, 2 workers)</strong> and developed functionality similar to heroku.com. </p>
+
+<p>User can provide git repository url in the system and system can <strong>build and deploy python projects</strong>. we have implemented support for golang too. (Only build part implemented.)</p>
+
+<p>We took this opportunity to learn distributed system concepts from scratch. We developed our own queue called raspberry queue which is in-memory priority queue. It is the backbone of our application. </p>
+
+<p>The system has following components:</p>
+
+<ul>
+<li>queue</li>
+<li>master node server</li>
+<li>build worker</li>
+<li>dyno (cluster) manager</li>
+<li>deployment worker</li>
+<li>system statistics (similar to heartbeat)</li>
+<li>cluster registration script (one time activity during a booted life)</li>
+</ul>
+
+<p>This is our admin dashboard.
+<img src="https://raw.githubusercontent.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster/master/screenshots/admin_2.png" alt="alt text" title="Admin Dashboard"></p>
+
+<p>User can see his homepage as follows:
+<img src="https://raw.githubusercontent.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster/master/screenshots/build_succeed.png" alt="alt text" title="Admin Dashboard"></p>
+
+<p>We have uploaded <strong>screenshots</strong> in screenshots directory. (<a href="https://github.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster/tree/master/screenshots">https://github.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster/tree/master/screenshots</a>)</p>
+
+<h5>
+<a id="we-used-following-configuration-to-set-up-our-cluster" class="anchor" href="#we-used-following-configuration-to-set-up-our-cluster" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>We used following configuration to set up our cluster:</h5>
+
+<blockquote>
+<p><em>We have maintained config.txt in master node and config_user.txt in client node to configure nodes. However, at some places, IP addresses and locations are hard coded. We will try to move them into config file.</em> </p>
+</blockquote>
+
+<p>Cluster information</p>
+
+<ul>
+<li><p>master node - 192.168.137.4</p></li>
+<li><p>cluster node 1 - 192.168.137.3</p></li>
+<li><p>cluster node 2 - 192.168.137.2</p></li>
+</ul>
+
+<p>Website for user login and registration = <a href="https://192.168.137.4:8000">https://192.168.137.4:8000</a></p>
+
+<p>Login to Admin Dashboard = <a href="https://192.168.137.4:8000/admin">https://192.168.137.4:8000/admin</a></p>
+
+<p>base path = /home/pi/raspberrypi_cluster</p>
+
+<h5>
+<a id="queue-is-started-to-save-different-tasks-with-priority--id" class="anchor" href="#queue-is-started-to-save-different-tasks-with-priority--id" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Queue is started to save different tasks with priority , id</h5>
+
+<p>Start the Raspberry queue -</p>
+
+<pre><code>path = /home/pi/raspberrypi_cluster/raspberryq
+command = ./startq.sh
+</code></pre>
+
+<h5>
+<a id="start-the-master-node-server--" class="anchor" href="#start-the-master-node-server--" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>start the master node server -</h5>
+
+<pre><code>path = /home/pi/raspberrypi_cluster/master_node/
+command = python manage.py runserver 0.0.0.0:8000
+</code></pre>
+
+<h5>
+<a id="register-cluster-with-server-and-send-system-statistics--" class="anchor" href="#register-cluster-with-server-and-send-system-statistics--" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Register cluster with server and send system statistics -</h5>
+
+<pre><code>path = /home/pi/raspberrypi_cluster/clusternode/cluster
+command = ./startup.py
+</code></pre>
+
+<h5>
+<a id="check-the-health-of-the-cluster----" class="anchor" href="#check-the-health-of-the-cluster----" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check the Health of the cluster ---</h5>
+
+<h5>
+<a id="start-the-dynomanager--" class="anchor" href="#start-the-dynomanager--" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start the dynomanager -</h5>
+
+<pre><code>path = /home/pi/raspberrypi_cluster/master_node/dyno_manager/DynoManager.py
+</code></pre>
+
+<h5>
+<a id="cluster-side-configuration" class="anchor" href="#cluster-side-configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cluster side configuration</h5>
+
+<p>Register the cluster to master and send system statistics such as CPU usage , network usage , disk Usage </p>
+
+<pre><code>path = /home/pi/raspberrypi_cluster/cluster_node/cluster
+./startup.sh
+</code></pre>
+
+<h5>
+<a id="to-build-and-deploy-an-application-onto-the-master-node-and-retrieve-application-to-master-node" class="anchor" href="#to-build-and-deploy-an-application-onto-the-master-node-and-retrieve-application-to-master-node" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To Build and deploy an application onto the master Node and retrieve application to master node</h5>
+
+<pre><code>path = /home/pi/raspberrypi_cluster/master_node/build_manager/BuildWorker.py
+</code></pre>
+
+<p>If someone wants to use or extend the functionality, most welcome!</p>
+
+<p>Leave us a comment or suggestions or questions! We will be happy to see you! :) </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/SJSU-CMPE273-Fall2015/raspberrypi_cluster">Raspberrypi cluster</a> is maintained by <a href="https://github.com/SJSU-CMPE273-Fall2015">SJSU-CMPE273-Fall2015</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
